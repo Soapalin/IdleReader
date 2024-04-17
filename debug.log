@@ -3176,3 +3176,268 @@
 [DEBUG] 2024/04/17 14:51:30 IncreaseKnowledge | 100
 [DEBUG] 2024/04/18 08:28:26 [- Lucien_5eee5bf8-33e2-4932-9953-d2a44768b62f_Reader_Save.bin]
 [DEBUG] 2024/04/18 08:28:26 Lucien_5eee5bf8-33e2-4932-9953-d2a44768b62f_Reader_Save.bin
+[DEBUG] 2024/04/18 08:45:49 []
+[DEBUG] 2024/04/18 08:45:50 New Game
+[DEBUG] 2024/04/18 08:45:50 []
+[DEBUG] 2024/04/18 08:45:58 [- Lucien_f54b6106-0d2a-43b3-894d-e1d41a034895_Reader_Save.bin]
+[DEBUG] 2024/04/18 08:45:58 Lucien_f54b6106-0d2a-43b3-894d-e1d41a034895_Reader_Save.bin
+[DEBUG] 2024/04/18 08:46:19 FinishedBook
+[DEBUG] 2024/04/18 08:46:19 IncreaseIQ | 1
+[DEBUG] 2024/04/18 08:46:19 FinishedBook | Repeat: 0
+[DEBUG] 2024/04/18 08:46:19 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 08:46:41 FinishedBook
+[DEBUG] 2024/04/18 08:46:41 FinishedBook | Repeat: 1
+[DEBUG] 2024/04/18 08:46:41 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 08:47:02 FinishedBook
+[DEBUG] 2024/04/18 08:47:02 FinishedBook | Repeat: 2
+[DEBUG] 2024/04/18 08:47:02 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 08:47:23 FinishedBook
+[DEBUG] 2024/04/18 08:47:23 FinishedBook | Repeat: 3
+[DEBUG] 2024/04/18 08:47:23 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 08:47:30 GetShopItemByIndex | 
+[DEBUG] 2024/04/18 08:47:30 IQ Cheat Book
+[DEBUG] 2024/04/18 08:47:30 Buy | 
+[DEBUG] 2024/04/18 08:47:30 IQ Cheat Book
+[DEBUG] 2024/04/18 08:47:31 GetShopItemByIndex | 
+[DEBUG] 2024/04/18 08:47:31 Knowledge Cheat Book
+[DEBUG] 2024/04/18 08:47:31 Buy | 
+[DEBUG] 2024/04/18 08:47:31 Knowledge Cheat Book
+[DEBUG] 2024/04/18 08:47:35 [- Lucien_f54b6106-0d2a-43b3-894d-e1d41a034895_Reader_Save.bin]
+[DEBUG] 2024/04/18 08:47:35 Lucien_f54b6106-0d2a-43b3-894d-e1d41a034895_Reader_Save.bin
+[DEBUG] 2024/04/18 09:04:59 [- Lucien_f54b6106-0d2a-43b3-894d-e1d41a034895_Reader_Save.bin]
+[DEBUG] 2024/04/18 09:04:59 Lucien_f54b6106-0d2a-43b3-894d-e1d41a034895_Reader_Save.bin
+[DEBUG] 2024/04/18 09:05:10 Continue
+[DEBUG] 2024/04/18 09:05:10 LoadPlayerFromFile | Decode Successful
+[DEBUG] 2024/04/18 09:05:10 {{f54b6106-0d2a-43b3-894d-e1d41a034895 Lucien 65 100 0 Dragon Republic R.F Kuang 0 0 {[{3a7cd11a-9ef7-44cc-be6d-999a7d59a7dd Dragon Republic R.F Kuang 0.1 100 1 1 1 100 0}]} 1 1} {[{3a7cd11a-9ef7-44cc-be6d-999a7d59a7dd Dragon Republic R.F Kuang 0 100 1 1 1 100 0}]} saves/Lucien_f54b6106-0d2a-43b3-894d-e1d41a034895_Reader_Save.bin {[]} {{[{50f4ba71-46da-434e-9c30-d1df53b646e2 Intro to Electrical Engineering Peter Mclean 0 600 300 5 100 600 0} {281d810e-7190-418c-8d99-39619766dcf4 Knowledge Cheat Book Lucien 0 10000 1 1 1 20 0} {85ce4fd2-bb16-41a3-a6c4-91def922595b IQ Cheat Book Lucien 0 10 150 100 40 20 0} {549cd4db-9658-41b3-8d68-532b1a23f923 Fundamentals of Electrical Engineering Gang Lei 0 600 300 5 100 600 0}]} {[{323654a5-907f-4120-b063-58e6a5a2763c Reading Glasses Increases Reading speed by 20% 10000 1 false <nil>} {95d245fb-1c04-47c7-a3d2-b477d9f18212 Bookmark Know where you left your reading. 100 1 false <nil>}]} 6 2024-04-18 08:45:58.8297164 +1000 AEST {0xdf2160 {─ ─ │ │ ╭ ╮ ╰ ╯ ├ ┤ ┼ ┬ ┴} true true true true true true false {<nil> map[] } [Name Description IQ Required Cost] 0xc0001982e0 0 0 0 [] []} 1 6}}
+[DEBUG] 2024/04/18 09:05:10 [- Lucien_f54b6106-0d2a-43b3-894d-e1d41a034895_Reader_Save.bin]
+[DEBUG] 2024/04/18 09:05:10 Lucien_f54b6106-0d2a-43b3-894d-e1d41a034895_Reader_Save.bin
+[DEBUG] 2024/04/18 09:05:29 FinishedBook
+[DEBUG] 2024/04/18 09:05:29 IncreaseIQ | 1
+[DEBUG] 2024/04/18 09:05:29 FinishedBook | Repeat: 0
+[DEBUG] 2024/04/18 09:05:29 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:05:50 FinishedBook
+[DEBUG] 2024/04/18 09:05:50 FinishedBook | Repeat: 1
+[DEBUG] 2024/04/18 09:05:50 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:06:12 FinishedBook
+[DEBUG] 2024/04/18 09:06:12 FinishedBook | Repeat: 2
+[DEBUG] 2024/04/18 09:06:12 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:06:33 FinishedBook
+[DEBUG] 2024/04/18 09:06:33 FinishedBook | Repeat: 3
+[DEBUG] 2024/04/18 09:06:33 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:06:51 GetShopItemByIndex | 
+[DEBUG] 2024/04/18 09:06:51 IQ Cheat Book
+[DEBUG] 2024/04/18 09:06:51 Buy | 
+[DEBUG] 2024/04/18 09:06:51 IQ Cheat Book
+[DEBUG] 2024/04/18 09:06:52 GetShopItemByIndex | 
+[DEBUG] 2024/04/18 09:06:52 Knowledge Cheat Book
+[DEBUG] 2024/04/18 09:06:52 Buy | 
+[DEBUG] 2024/04/18 09:06:52 Knowledge Cheat Book
+[DEBUG] 2024/04/18 09:06:54 FinishedBook
+[DEBUG] 2024/04/18 09:06:54 FinishedBook | Repeat: 4
+[DEBUG] 2024/04/18 09:06:54 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:06:55 [- Lucien_f54b6106-0d2a-43b3-894d-e1d41a034895_Reader_Save.bin]
+[DEBUG] 2024/04/18 09:06:55 Lucien_f54b6106-0d2a-43b3-894d-e1d41a034895_Reader_Save.bin
+[DEBUG] 2024/04/18 09:06:57 [- Lucien_f54b6106-0d2a-43b3-894d-e1d41a034895_Reader_Save.bin]
+[DEBUG] 2024/04/18 09:06:57 Lucien_f54b6106-0d2a-43b3-894d-e1d41a034895_Reader_Save.bin
+[DEBUG] 2024/04/18 09:07:04 ChooseBook
+[DEBUG] 2024/04/18 09:07:04 true
+[DEBUG] 2024/04/18 09:07:25 FinishedBook
+[DEBUG] 2024/04/18 09:07:25 IncreaseIQ | 100
+[DEBUG] 2024/04/18 09:07:25 FinishedBook | Repeat: 0
+[DEBUG] 2024/04/18 09:07:25 IncreaseKnowledge | 10
+[DEBUG] 2024/04/18 09:07:43 [- Lucien_f54b6106-0d2a-43b3-894d-e1d41a034895_Reader_Save.bin]
+[DEBUG] 2024/04/18 09:07:43 Lucien_f54b6106-0d2a-43b3-894d-e1d41a034895_Reader_Save.bin
+[DEBUG] 2024/04/18 09:07:44 [- Lucien_f54b6106-0d2a-43b3-894d-e1d41a034895_Reader_Save.bin]
+[DEBUG] 2024/04/18 09:07:44 Lucien_f54b6106-0d2a-43b3-894d-e1d41a034895_Reader_Save.bin
+[DEBUG] 2024/04/18 09:07:47 FinishedBook
+[DEBUG] 2024/04/18 09:07:47 FinishedBook | Repeat: 1
+[DEBUG] 2024/04/18 09:07:47 IncreaseKnowledge | 10
+[DEBUG] 2024/04/18 09:07:51 ChooseBook
+[DEBUG] 2024/04/18 09:07:51 true
+[DEBUG] 2024/04/18 09:08:06 ChooseBook
+[DEBUG] 2024/04/18 09:08:06 true
+[DEBUG] 2024/04/18 09:08:13 FinishedBook
+[DEBUG] 2024/04/18 09:08:13 IncreaseIQ | 1
+[DEBUG] 2024/04/18 09:08:13 FinishedBook | Repeat: 0
+[DEBUG] 2024/04/18 09:08:13 IncreaseKnowledge | 10000
+[DEBUG] 2024/04/18 09:08:27 FinishedBook
+[DEBUG] 2024/04/18 09:08:27 IncreaseIQ | 1
+[DEBUG] 2024/04/18 09:08:27 FinishedBook | Repeat: 0
+[DEBUG] 2024/04/18 09:08:27 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:08:34 FinishedBook
+[DEBUG] 2024/04/18 09:08:34 FinishedBook | Repeat: 1
+[DEBUG] 2024/04/18 09:08:34 IncreaseKnowledge | 10000
+[DEBUG] 2024/04/18 09:08:48 FinishedBook
+[DEBUG] 2024/04/18 09:08:48 FinishedBook | Repeat: 1
+[DEBUG] 2024/04/18 09:08:48 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:08:55 FinishedBook
+[DEBUG] 2024/04/18 09:08:55 FinishedBook | Repeat: 2
+[DEBUG] 2024/04/18 09:08:55 IncreaseKnowledge | 10000
+[DEBUG] 2024/04/18 09:09:09 FinishedBook
+[DEBUG] 2024/04/18 09:09:09 FinishedBook | Repeat: 2
+[DEBUG] 2024/04/18 09:09:09 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:09:16 FinishedBook
+[DEBUG] 2024/04/18 09:09:16 FinishedBook | Repeat: 3
+[DEBUG] 2024/04/18 09:09:16 IncreaseKnowledge | 10000
+[DEBUG] 2024/04/18 09:09:30 FinishedBook
+[DEBUG] 2024/04/18 09:09:30 FinishedBook | Repeat: 3
+[DEBUG] 2024/04/18 09:09:30 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:09:37 FinishedBook
+[DEBUG] 2024/04/18 09:09:37 FinishedBook | Repeat: 4
+[DEBUG] 2024/04/18 09:09:37 IncreaseKnowledge | 10000
+[DEBUG] 2024/04/18 09:09:51 FinishedBook
+[DEBUG] 2024/04/18 09:09:51 FinishedBook | Repeat: 4
+[DEBUG] 2024/04/18 09:09:51 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:09:59 FinishedBook
+[DEBUG] 2024/04/18 09:09:59 FinishedBook | Repeat: 5
+[DEBUG] 2024/04/18 09:09:59 IncreaseKnowledge | 10000
+[DEBUG] 2024/04/18 09:10:13 FinishedBook
+[DEBUG] 2024/04/18 09:10:13 FinishedBook | Repeat: 5
+[DEBUG] 2024/04/18 09:10:13 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:10:20 FinishedBook
+[DEBUG] 2024/04/18 09:10:20 FinishedBook | Repeat: 6
+[DEBUG] 2024/04/18 09:10:20 IncreaseKnowledge | 10000
+[DEBUG] 2024/04/18 09:10:34 FinishedBook
+[DEBUG] 2024/04/18 09:10:34 FinishedBook | Repeat: 6
+[DEBUG] 2024/04/18 09:10:34 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:10:41 FinishedBook
+[DEBUG] 2024/04/18 09:10:41 FinishedBook | Repeat: 7
+[DEBUG] 2024/04/18 09:10:41 IncreaseKnowledge | 10000
+[DEBUG] 2024/04/18 09:10:55 FinishedBook
+[DEBUG] 2024/04/18 09:10:55 FinishedBook | Repeat: 7
+[DEBUG] 2024/04/18 09:10:55 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:11:02 FinishedBook
+[DEBUG] 2024/04/18 09:11:02 FinishedBook | Repeat: 8
+[DEBUG] 2024/04/18 09:11:02 IncreaseKnowledge | 10000
+[DEBUG] 2024/04/18 09:11:16 FinishedBook
+[DEBUG] 2024/04/18 09:11:16 FinishedBook | Repeat: 8
+[DEBUG] 2024/04/18 09:11:16 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:11:23 FinishedBook
+[DEBUG] 2024/04/18 09:11:23 FinishedBook | Repeat: 9
+[DEBUG] 2024/04/18 09:11:23 IncreaseKnowledge | 10000
+[DEBUG] 2024/04/18 09:11:37 FinishedBook
+[DEBUG] 2024/04/18 09:11:37 FinishedBook | Repeat: 9
+[DEBUG] 2024/04/18 09:11:37 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:11:45 FinishedBook
+[DEBUG] 2024/04/18 09:11:45 FinishedBook | Repeat: 10
+[DEBUG] 2024/04/18 09:11:45 IncreaseKnowledge | 10000
+[DEBUG] 2024/04/18 09:11:59 FinishedBook
+[DEBUG] 2024/04/18 09:11:59 FinishedBook | Repeat: 10
+[DEBUG] 2024/04/18 09:11:59 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:12:06 FinishedBook
+[DEBUG] 2024/04/18 09:12:06 FinishedBook | Repeat: 11
+[DEBUG] 2024/04/18 09:12:06 IncreaseKnowledge | 10000
+[DEBUG] 2024/04/18 09:12:20 FinishedBook
+[DEBUG] 2024/04/18 09:12:20 FinishedBook | Repeat: 11
+[DEBUG] 2024/04/18 09:12:20 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:12:27 FinishedBook
+[DEBUG] 2024/04/18 09:12:27 FinishedBook | Repeat: 12
+[DEBUG] 2024/04/18 09:12:27 IncreaseKnowledge | 10000
+[DEBUG] 2024/04/18 09:12:41 FinishedBook
+[DEBUG] 2024/04/18 09:12:41 FinishedBook | Repeat: 12
+[DEBUG] 2024/04/18 09:12:41 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:12:48 FinishedBook
+[DEBUG] 2024/04/18 09:12:48 FinishedBook | Repeat: 13
+[DEBUG] 2024/04/18 09:12:48 IncreaseKnowledge | 10000
+[DEBUG] 2024/04/18 09:13:02 FinishedBook
+[DEBUG] 2024/04/18 09:13:02 FinishedBook | Repeat: 13
+[DEBUG] 2024/04/18 09:13:02 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:13:09 FinishedBook
+[DEBUG] 2024/04/18 09:13:09 FinishedBook | Repeat: 14
+[DEBUG] 2024/04/18 09:13:09 IncreaseKnowledge | 10000
+[DEBUG] 2024/04/18 09:13:23 FinishedBook
+[DEBUG] 2024/04/18 09:13:23 FinishedBook | Repeat: 14
+[DEBUG] 2024/04/18 09:13:23 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:13:30 FinishedBook
+[DEBUG] 2024/04/18 09:13:30 FinishedBook | Repeat: 15
+[DEBUG] 2024/04/18 09:13:30 IncreaseKnowledge | 10000
+[DEBUG] 2024/04/18 09:13:45 FinishedBook
+[DEBUG] 2024/04/18 09:13:45 FinishedBook | Repeat: 15
+[DEBUG] 2024/04/18 09:13:45 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:13:52 FinishedBook
+[DEBUG] 2024/04/18 09:13:52 FinishedBook | Repeat: 16
+[DEBUG] 2024/04/18 09:13:52 IncreaseKnowledge | 10000
+[DEBUG] 2024/04/18 09:14:06 FinishedBook
+[DEBUG] 2024/04/18 09:14:06 FinishedBook | Repeat: 16
+[DEBUG] 2024/04/18 09:14:06 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:14:13 FinishedBook
+[DEBUG] 2024/04/18 09:14:13 FinishedBook | Repeat: 17
+[DEBUG] 2024/04/18 09:14:13 IncreaseKnowledge | 10000
+[DEBUG] 2024/04/18 09:14:27 FinishedBook
+[DEBUG] 2024/04/18 09:14:27 FinishedBook | Repeat: 17
+[DEBUG] 2024/04/18 09:14:27 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:14:34 FinishedBook
+[DEBUG] 2024/04/18 09:14:34 FinishedBook | Repeat: 18
+[DEBUG] 2024/04/18 09:14:34 IncreaseKnowledge | 10000
+[DEBUG] 2024/04/18 09:14:48 FinishedBook
+[DEBUG] 2024/04/18 09:14:48 FinishedBook | Repeat: 18
+[DEBUG] 2024/04/18 09:14:48 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:14:55 FinishedBook
+[DEBUG] 2024/04/18 09:14:55 FinishedBook | Repeat: 19
+[DEBUG] 2024/04/18 09:14:55 IncreaseKnowledge | 10000
+[DEBUG] 2024/04/18 09:15:09 FinishedBook
+[DEBUG] 2024/04/18 09:15:09 FinishedBook | Repeat: 19
+[DEBUG] 2024/04/18 09:15:09 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:15:16 FinishedBook
+[DEBUG] 2024/04/18 09:15:16 FinishedBook | Repeat: 20
+[DEBUG] 2024/04/18 09:15:16 IncreaseKnowledge | 10000
+[DEBUG] 2024/04/18 09:15:31 FinishedBook
+[DEBUG] 2024/04/18 09:15:31 FinishedBook | Repeat: 20
+[DEBUG] 2024/04/18 09:15:31 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:15:38 FinishedBook
+[DEBUG] 2024/04/18 09:15:38 FinishedBook | Repeat: 21
+[DEBUG] 2024/04/18 09:15:38 IncreaseKnowledge | 10000
+[DEBUG] 2024/04/18 09:15:52 FinishedBook
+[DEBUG] 2024/04/18 09:15:52 FinishedBook | Repeat: 21
+[DEBUG] 2024/04/18 09:15:52 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:15:59 FinishedBook
+[DEBUG] 2024/04/18 09:15:59 FinishedBook | Repeat: 22
+[DEBUG] 2024/04/18 09:15:59 IncreaseKnowledge | 10000
+[DEBUG] 2024/04/18 09:16:13 FinishedBook
+[DEBUG] 2024/04/18 09:16:13 FinishedBook | Repeat: 22
+[DEBUG] 2024/04/18 09:16:13 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:16:20 FinishedBook
+[DEBUG] 2024/04/18 09:16:20 FinishedBook | Repeat: 23
+[DEBUG] 2024/04/18 09:16:20 IncreaseKnowledge | 10000
+[DEBUG] 2024/04/18 09:16:34 FinishedBook
+[DEBUG] 2024/04/18 09:16:34 FinishedBook | Repeat: 23
+[DEBUG] 2024/04/18 09:16:34 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:16:41 FinishedBook
+[DEBUG] 2024/04/18 09:16:41 FinishedBook | Repeat: 24
+[DEBUG] 2024/04/18 09:16:41 IncreaseKnowledge | 10000
+[DEBUG] 2024/04/18 09:16:55 FinishedBook
+[DEBUG] 2024/04/18 09:16:55 FinishedBook | Repeat: 24
+[DEBUG] 2024/04/18 09:16:55 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:17:02 FinishedBook
+[DEBUG] 2024/04/18 09:17:02 FinishedBook | Repeat: 25
+[DEBUG] 2024/04/18 09:17:02 IncreaseKnowledge | 10000
+[DEBUG] 2024/04/18 09:17:17 FinishedBook
+[DEBUG] 2024/04/18 09:17:17 FinishedBook | Repeat: 25
+[DEBUG] 2024/04/18 09:17:17 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:17:24 FinishedBook
+[DEBUG] 2024/04/18 09:17:24 FinishedBook | Repeat: 26
+[DEBUG] 2024/04/18 09:17:24 IncreaseKnowledge | 10000
+[DEBUG] 2024/04/18 09:17:38 FinishedBook
+[DEBUG] 2024/04/18 09:17:38 FinishedBook | Repeat: 26
+[DEBUG] 2024/04/18 09:17:38 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:17:45 FinishedBook
+[DEBUG] 2024/04/18 09:17:45 FinishedBook | Repeat: 27
+[DEBUG] 2024/04/18 09:17:45 IncreaseKnowledge | 10000
+[DEBUG] 2024/04/18 09:17:59 FinishedBook
+[DEBUG] 2024/04/18 09:17:59 FinishedBook | Repeat: 27
+[DEBUG] 2024/04/18 09:17:59 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:18:06 FinishedBook
+[DEBUG] 2024/04/18 09:18:06 FinishedBook | Repeat: 28
+[DEBUG] 2024/04/18 09:18:06 IncreaseKnowledge | 10000
+[DEBUG] 2024/04/18 09:18:20 FinishedBook
+[DEBUG] 2024/04/18 09:18:20 FinishedBook | Repeat: 28
+[DEBUG] 2024/04/18 09:18:20 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:18:27 FinishedBook
+[DEBUG] 2024/04/18 09:18:27 FinishedBook | Repeat: 29
+[DEBUG] 2024/04/18 09:18:27 IncreaseKnowledge | 10000
+[DEBUG] 2024/04/18 09:18:41 FinishedBook
+[DEBUG] 2024/04/18 09:18:41 FinishedBook | Repeat: 29
+[DEBUG] 2024/04/18 09:18:41 IncreaseKnowledge | 100
+[DEBUG] 2024/04/18 09:18:48 FinishedBook
+[DEBUG] 2024/04/18 09:18:48 FinishedBook | Repeat: 30
+[DEBUG] 2024/04/18 09:18:48 IncreaseKnowledge | 10000

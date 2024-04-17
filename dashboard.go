@@ -142,7 +142,7 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				if m.bs_cursor > len(m.ps.Library.Books) {
 					// Item Details Screen
 				} else {
-					switched := InitialBookDetailsModel(m.ps.Library.Books[m.bs_cursor])
+					switched := InitialBookDetailsModel(m.ps.Library.Books[m.bs_cursor], &m.ps)
 					return InitialRootModel().SwitchScreen(&switched)
 				}
 
