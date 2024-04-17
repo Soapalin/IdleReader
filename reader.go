@@ -1,0 +1,121 @@
+package main
+
+import (
+	"errors"
+	"log"
+	"strconv"
+
+	"github.com/google/uuid"
+)
+
+var (
+	MAX_SIMULT_BOOK = 3
+)
+
+type ReadingSpeed struct {
+	Word    int
+	Line    int
+	Page    int
+	Chapter int
+	Book    int
+}
+
+type Reader struct {
+	ID               uuid.UUID
+	Name             string
+	IQ               int
+	Fun              int
+	Knowledge        int
+	FavouriteBook    string
+	FavouriteAuthor  string
+	Prestige         int
+	ReadCapacity     int
+	CurrentReads     Library
+	CurrentReadLimit int
+	ReadingSpeed     int
+}
+
+func (r *Reader) ReadingIncrease() {
+
+}
+func (r *Reader) IncreaseProgress(bookID uuid.UUID) {
+	for _, b := range r.CurrentReads.Books {
+		if b.ID == bookID {
+			b.Progress += 0.05
+		}
+	}
+}
+
+func (r *Reader) SwitchBook(index int, bookID uuid.UUID) error {
+	if index > (r.CurrentReadLimit - 1) {
+		return errors.New("index > current read limit")
+	}
+
+	return nil
+}
+
+func (r *Reader) DecreaseKnowledge(amount int) {
+	r.Knowledge = r.Knowledge - amount
+}
+
+func (r *Reader) FinishedBook(bookID uuid.UUID) {
+	log.Println("FinishedBook")
+	for i, b := range r.CurrentReads.Books {
+		if b.ID == bookID {
+			b_p := &r.CurrentReads.Books[i]
+			if b_p.Repeat == 0 {
+				r.IncreaseIQ(b_p.IntelligenceIncrease)
+			}
+			log.Println("FinishedBook | Repeat: " + strconv.Itoa(b_p.Repeat))
+			b_p.Repeat += 1
+			r.IncreaseKnowledge(b_p.KnowledgeIncrease)
+			b_p.Progress = 0
+			//TODO: less knowledge earned when he book has been read many times
+		}
+	}
+}
+
+func (r *Reader) IncreaseKnowledge(amount int) {
+	log.Println("IncreaseKnowledge | " + strconv.Itoa(amount))
+	r.Knowledge += amount
+}
+
+func (r *Reader) IncreaseIQ(amount int) {
+	log.Println("IncreaseIQ | " + strconv.Itoa(amount))
+	old_IQ := r.IQ
+	r.IQ += amount
+	if old_IQ < 100 && r.IQ >= 100 {
+		r.CurrentReadLimit = r.CurrentReadLimit + 1
+	}
+	if old_IQ < 200 && r.IQ >= 200 {
+		r.CurrentReadLimit = r.CurrentReadLimit + 1
+	}
+}
+
+func (r *Reader) ActivatePrestige() {
+	r.Prestige += 1
+}
+
+func (r *Reader) IQ_Title() string {
+	if r.IQ < 70 {
+		return "Extremely Low"
+	} else if r.IQ < 80 {
+		return "Very Low"
+	} else if r.IQ < 90 {
+		return "Low Average"
+	} else if r.IQ < 110 {
+		return "Average"
+	} else if r.IQ < 120 {
+		return "High Average"
+	} else if r.IQ < 130 {
+		return "Very High"
+	} else if r.IQ < 150 {
+		return "Smarty Pants"
+	} else if r.IQ < 200 {
+		return "Big Brain"
+	} else if r.IQ < 400 {
+		return "Planetary Brain"
+	} else {
+		return "Galaxy Brain"
+	}
+}
