@@ -85,7 +85,7 @@ func (s *Shop) Buy(ps *PlayerSave) TransactionResult {
 			return knowledgeMissingTransaction
 		}
 		ps.Reader.DecreaseKnowledge(s.Books.Books[index].KnowledgeRequirement)
-		ps.Library.AddBookToLibrary(s.Books.Books[index])
+		ps.Reader.Library.AddBookToLibrary(s.Books.Books[index])
 		return bookTransaction
 	} else if (index - len(s.Books.Books)) < len(s.Items.Items) {
 		log.Println(s.Items.Items[index-len(s.Books.Books)].Name)
@@ -96,7 +96,7 @@ func (s *Shop) Buy(ps *PlayerSave) TransactionResult {
 			return knowledgeMissingTransaction
 		}
 		ps.Reader.DecreaseKnowledge(s.Items.Items[index-len(s.Books.Books)].Cost)
-		ps.Inventory.AddItem(s.Items.Items[index-len(s.Books.Books)])
+		ps.Reader.Inventory.AddItem(s.Items.Items[index-len(s.Books.Books)])
 		return itemTransaction
 	}
 	return unknownTransaction
@@ -140,7 +140,7 @@ func (s *Shop) PreviousRow() {
 }
 
 func (s *Shop) Update() {
-	if s.Modified.Add(time.Minute * 30).Before(time.Now()) {
+	if s.Modified.Add(time.Minute * 1).Before(time.Now()) {
 		log.Println("Shop | Update()")
 		*s = InitShop()
 		s.Modified = time.Now()

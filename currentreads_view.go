@@ -13,7 +13,7 @@ func (m *DashboardModel) PreviousCurrentReads() {
 
 func (m *DashboardModel) NextCurrentReads() {
 	m.cr_cursor++
-	if m.cr_cursor >= len(m.ps.Reader.CurrentReads.Books) {
+	if m.cr_cursor >= len(m.ps.Reader.CurrentReads.BookIDs) {
 		m.cr_cursor = 0
 	}
 }
@@ -21,8 +21,12 @@ func (m *DashboardModel) NextCurrentReads() {
 func (m *DashboardModel) CurrentReadsView() string {
 	s := ""
 	r := &m.ps.Reader
-	for i, cr := range r.CurrentReads.Books {
-		s += theme.Heading2.Render(cr.Name + ", " + cr.Author)
+	for i, cr := range r.CurrentReads.BookIDs {
+		cr_data, err := m.ps.Reader.Library.GetBookPointerByID(cr)
+		if err != nil {
+			panic(err)
+		}
+		s += theme.Heading2.Render(cr_data.Name + ", " + cr_data.Author)
 		if i == m.cr_cursor {
 			s += " ←"
 		}
@@ -35,7 +39,7 @@ func (m *DashboardModel) CurrentReadsView() string {
 	}
 
 	book_locked := MAX_SIMULT_BOOK - r.CurrentReadLimit
-	book_unlocked := MAX_SIMULT_BOOK - book_locked - len(r.CurrentReads.Books)
+	book_unlocked := MAX_SIMULT_BOOK - book_locked - len(r.CurrentReads.BookIDs)
 	n := 0
 	for n < book_unlocked {
 		s += theme.Heading2.Render("[Select a book to read in your Bookshelf]")

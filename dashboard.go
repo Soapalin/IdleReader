@@ -2,6 +2,7 @@ package main
 
 import (
 	"game/engine/theme"
+	"log"
 	"strconv"
 	"time"
 
@@ -38,7 +39,7 @@ var (
 	activeTabStyle    = inactiveTabStyle.Copy().Background(highlightColor).Border(activeTabBorder, true)
 )
 
-func InitialDashboardModel(ps *PlayerSave) DashboardModel {
+func InitialDashboardModel(ps *PlayerSave, activeTab int, bs_cursor int) DashboardModel {
 	tabs := []string{"My Bookshelf", "Current Reads", "Bookshop", "Library", "Book Club", "Help", "Exit"}
 	prog := make([]progress.Model, 3)
 	for i := range prog {
@@ -46,12 +47,12 @@ func InitialDashboardModel(ps *PlayerSave) DashboardModel {
 	}
 	return DashboardModel{
 		tabs:         tabs,
-		activeTab:    1,
+		activeTab:    activeTab,
 		ps:           *ps,
 		progress:     prog,
 		errorMessage: "",
 		cr_cursor:    0,
-		bs_cursor:    0,
+		bs_cursor:    bs_cursor,
 		bookChange:   false,
 	}
 }
@@ -83,8 +84,12 @@ func tickCmd() tea.Cmd {
 func (m DashboardModel) Init() tea.Cmd {
 	var cmd []tea.Cmd
 	cmd = append(cmd, tickCmd())
-	for i := range m.ps.Reader.CurrentReads.Books {
-		cr_p := &m.ps.Reader.CurrentReads.Books[i]
+	for i, id := range m.ps.Reader.CurrentReads.BookIDs {
+		cr_p, err := m.ps.Reader.Library.GetBookPointerByID(id)
+		if err != nil {
+			panic(err)
+
+		}
 		cmd = append(cmd, m.progress[i].IncrPercent(cr_p.Progress))
 	}
 
@@ -139,11 +144,13 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			case 2:
 				m.TryBuy()
 			case 0:
-				if m.bs_cursor > len(m.ps.Library.Books) {
-					// Item Details Screen
-				} else {
-					switched := InitialBookDetailsModel(m.ps.Library.Books[m.bs_cursor], &m.ps)
-					return InitialRootModel().SwitchScreen(&switched)
+				if !m.bookChange {
+					if m.bs_cursor > len(m.ps.Reader.Library.Books) {
+						// Item Details Screen
+					} else {
+						switched := InitialBookDetailsModel(m.ps.Reader.Library.Books[m.bs_cursor], m)
+						return InitialRootModel().SwitchScreen(&switched)
+					}
 				}
 
 			}
@@ -179,26 +186,37 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tickMsg:
 		var cmd []tea.Cmd
 		cmd = append(cmd, tickCmd())
+		m.ps.Shop.Update()
 
-		for i := range m.ps.Reader.CurrentReads.Books {
-			cr_p := &m.ps.Reader.CurrentReads.Books[i]
+		for i, id := range m.ps.Reader.CurrentReads.BookIDs {
+			r := &m.ps.Reader
+			cr_p, err := r.Library.GetBookPointerByID(id)
+			if err != nil {
+				panic(err)
+			}
+			log.Println("tickMsg | cr: " + cr_p.Name)
+			log.Println(cr_p)
 			if cr_p.Progress >= 1.0 {
-				r := &m.ps.Reader
-				r.FinishedBook(cr_p.ID)
+				r.FinishedBook(cr_p)
 				cmd = append(cmd, m.progress[i].DecrPercent(1))
-				// log.Println("Progression | " + strconv.FormatFloat(cr_p.Progress, 'f', -1, 64))
 			} else {
-				cr_p.Progress += 0.05
+				r.IncreaseProgress(cr_p)
+
 				cmd = append(cmd, m.progress[i].IncrPercent(0.05))
-				// log.Println("Progression | " + strconv.FormatFloat(cr_p.Progress, 'f', -1, 64))
+				log.Println("Progression | " + strconv.FormatFloat(cr_p.Progress, 'f', -1, 64))
 			}
 		}
 		return m, tea.Batch(cmd...)
 	// FrameMsg is sent when the progress bar wants to animate itself
 	case progress.FrameMsg:
-		progressModel, cmd := m.progress[0].Update(msg)
-		m.progress[0] = progressModel.(progress.Model)
-		return m, cmd
+		var cmds []tea.Cmd
+		for i := range m.progress {
+			progressModel, cmd := m.progress[i].Update(msg)
+			m.progress[i] = progressModel.(progress.Model)
+			cmds = append(cmds, cmd)
+		}
+
+		return m, tea.Batch(cmds...)
 	}
 	return m, nil
 
@@ -255,7 +273,6 @@ func (m *DashboardModel) View() string {
 	case 1:
 		s += m.CurrentReadsView()
 	case 2:
-		m.ps.Shop.Update()
 		s += m.BookshopView()
 	case 3:
 		s += m.LibraryView()

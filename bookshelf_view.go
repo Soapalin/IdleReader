@@ -10,7 +10,16 @@ import (
 
 func (m *DashboardModel) BookshelfView() string {
 	s := theme.Heading1.Render("Books") + "\n"
-	for i, b := range m.ps.Library.Books {
+	for i, b := range m.ps.Reader.Library.Books {
+		if b.Repeat > 0 {
+			s += "✅"
+		} else {
+			if b.Progress > 0 {
+				s += "📖"
+			} else {
+				s += "📓"
+			}
+		}
 		s += b.Name + ", " + b.Author
 		if m.bs_cursor == i {
 			s += theme.CursorArrow
@@ -18,9 +27,9 @@ func (m *DashboardModel) BookshelfView() string {
 		s += "\n"
 	}
 	s += theme.Heading1.Render("Inventory") + "\n"
-	for index, i := range m.ps.Inventory.Items {
-		s += i.Name
-		if m.bs_cursor == (len(m.ps.Library.Books) + index) {
+	for index, i := range m.ps.Reader.Inventory.Items {
+		s += "• " + i.Name
+		if m.bs_cursor == (len(m.ps.Reader.Library.Books) + index) {
 			s += theme.CursorArrow
 		}
 		s += "\n"
@@ -30,7 +39,7 @@ func (m *DashboardModel) BookshelfView() string {
 
 func (m *DashboardModel) NextItemBookshelf() {
 	m.bs_cursor++
-	if m.bs_cursor >= len(m.ps.Inventory.Items)+len(m.ps.Library.Books) {
+	if m.bs_cursor >= len(m.ps.Reader.Inventory.Items)+len(m.ps.Reader.Library.Books) {
 		m.bs_cursor = 0
 	}
 }
@@ -43,15 +52,15 @@ func (m *DashboardModel) PreviousItemBookshelf() {
 }
 
 func (m *DashboardModel) TrySwitchBook() {
-	if m.bs_cursor >= len(m.ps.Library.Books) {
+	if m.bs_cursor >= len(m.ps.Reader.Library.Books) {
 		return
 	}
 	cr := m.ps.Reader.CurrentReads
-	book_owned := m.ps.Library.Books
+	book_owned := m.ps.Reader.Library.Books
 	var book_available Library
 
 	for _, b := range book_owned {
-		if !cr.ContainsBook(b) {
+		if !cr.ContainsBook(b.ID) {
 			book_available.AddBookToLibrary(b)
 		}
 	}
@@ -75,22 +84,26 @@ func (m *DashboardModel) ChooseBook(msg string) (tea.Model, tea.Cmd) {
 			return m, nil
 		}
 		cr := &m.ps.Reader.CurrentReads
-		if index >= len(cr.Books) {
-			cr.AddBookToLibrary(m.ps.Library.Books[m.bs_cursor])
+		if index >= len(cr.BookIDs) {
+			cr.AddBookToLibrary(m.ps.Reader.Library.Books[m.bs_cursor].ID)
 		} else {
-			if cr.ContainsBook(m.ps.Library.Books[m.bs_cursor]) {
+			if cr.ContainsBook(m.ps.Reader.Library.Books[m.bs_cursor].ID) {
 				m.bookChange = false
 				m.errorMessage = "You are already reading this book!"
 				return m, nil
 			}
-			cr.ReplaceBook(index, m.ps.Library.Books[m.bs_cursor])
+			cr.ReplaceBook(index, m.ps.Reader.Library.Books[m.bs_cursor].ID)
 		}
 		m.bookChange = false
 		m.errorMessage = "Current Book changed successfully!"
 
 		var cmd []tea.Cmd
 		cmd = append(cmd, m.progress[index].DecrPercent(1))
-		cmd = append(cmd, m.progress[index].DecrPercent(cr.Books[index].Progress))
+		b_value, err := m.ps.Reader.Library.GetBookPointerByID(cr.BookIDs[index])
+		if err != nil {
+			panic(err)
+		}
+		cmd = append(cmd, m.progress[index].IncrPercent(b_value.Progress))
 
 		return m, tea.Batch(cmd...)
 	}

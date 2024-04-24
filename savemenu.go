@@ -9,6 +9,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -81,20 +82,18 @@ type SaveMenuModel struct {
 }
 
 type PlayerSave struct {
-	Reader    Reader
-	Library   Library
-	Filename  string
-	Inventory GameItemDatabase
-	Shop      Shop
+	Reader   Reader
+	Filename string
+	Shop     Shop
 }
 
 func (ps *PlayerSave) AlreadyOwned(id uuid.UUID) bool {
-	for _, b := range ps.Library.Books {
+	for _, b := range ps.Reader.Library.Books {
 		if b.ID == id {
 			return true
 		}
 	}
-	for _, i := range ps.Inventory.Items {
+	for _, i := range ps.Reader.Inventory.Items {
 		if i.ID == id {
 			return true
 		}
@@ -104,12 +103,18 @@ func (ps *PlayerSave) AlreadyOwned(id uuid.UUID) bool {
 
 // func GetLatestSave() PlayerSave {
 func GetLatestSave() string {
-	dir := "saves/"
+	dir, err := os.UserHomeDir()
+	if err != nil {
+		log.Println("GetLatestSave | os.UserHomeDir")
+		panic(err)
+	}
+	dir += "\\Documents\\IdleReader"
+
 	files, err := os.ReadDir(dir)
 	if err != nil {
 		log.Println("GetLatestSave | os.ReadDir")
 		log.Println(dir)
-		panic(err)
+		// panic(err)
 	}
 
 	log.Println(files)
@@ -119,14 +124,14 @@ func GetLatestSave() string {
 		if strings.HasSuffix(sv.Name(), "Reader_Save.bin") {
 			if reader_save == "" {
 				reader_save = sv.Name()
-				last_saved_info, err := os.Stat(dir + sv.Name())
+				last_saved_info, err := os.Stat(filepath.Join(dir, sv.Name()))
 				if err != nil {
 					panic(err)
 				}
 				last_saved = last_saved_info.ModTime()
 				log.Println(reader_save)
 			} else {
-				new_save_info, err := os.Stat(dir + sv.Name())
+				new_save_info, err := os.Stat(filepath.Join(dir, sv.Name()))
 				if err != nil {
 					panic(err)
 				}
@@ -141,7 +146,9 @@ func GetLatestSave() string {
 	if reader_save == "" {
 		return ""
 	}
-	return "saves/" + reader_save
+
+	path := filepath.Join(dir, reader_save)
+	return path
 }
 
 func LoadPlayerFromFile(filename string) (PlayerSave, error) {
@@ -211,7 +218,8 @@ func InitialSaveMenuModel() SaveMenuModel {
 	if save_file == "" {
 		choices = []string{"New Game", "Load Game"}
 	} else {
-		readerName := strings.Replace(save_file, "saves/", "", -1)
+		// readerName := strings.Replace(save_file, "saves/", "", -1)
+		readerName := filepath.Base(save_file)
 		readerName = strings.Split(readerName, "_")[0]
 		choices = []string{"Continue - " + readerName, "New Game", "Load Game"}
 	}
@@ -290,7 +298,7 @@ func (m SaveMenuModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					if err != nil {
 						m.model_err = err.Error()
 					} else {
-						switched := InitialDashboardModel(&playersave)
+						switched := InitialDashboardModel(&playersave, 1, 0)
 						return InitialRootModel().SwitchScreen(&switched)
 					}
 
@@ -309,7 +317,7 @@ func (m SaveMenuModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 							if err != nil {
 								m.model_err = err.Error()
 							} else {
-								switched := InitialDashboardModel(&playersave)
+								switched := InitialDashboardModel(&playersave, 1, 0)
 								return InitialRootModel().SwitchScreen(&switched)
 							}
 						} else if errors.Is(err, os.ErrNotExist) {

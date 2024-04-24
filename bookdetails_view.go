@@ -1,15 +1,20 @@
 package main
 
-import tea "github.com/charmbracelet/bubbletea"
+import (
+	"game/engine/theme"
+	"strconv"
+
+	tea "github.com/charmbracelet/bubbletea"
+)
 
 type BookDetailsModel struct {
 	cursor int
 	book   Book
-	ps *PlayerSave
+	dm     *DashboardModel
 }
 
-func InitialBookDetailsModel(book Book, playersave *PlayerSave) BookDetailsModel {
-	return BookDetailsModel{cursor: 0, book: book, ps: playersave}
+func InitialBookDetailsModel(book Book, dm *DashboardModel) BookDetailsModel {
+	return BookDetailsModel{cursor: 0, book: book, dm: dm}
 }
 
 func (m BookDetailsModel) Init() tea.Cmd {
@@ -21,13 +26,20 @@ func (m BookDetailsModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		switch msg.String() {
 		case tea.KeyCtrlC.String(), tea.KeyEsc.String():
-			switched := InitialDashboardModel(m.ps)
-			return InitialRootModel().SwitchScreen(&switched)
+			return InitialRootModel().SwitchScreen(m.dm)
 		}
 	}
 	return m, nil
 }
 
 func (m BookDetailsModel) View() string {
-	return "Booooooks"
+	s := ""
+	s += theme.Heading1.Render(m.book.Name)
+	s += "\n"
+	s += theme.Heading2.Render(m.book.Author)
+	s += "\n\n"
+	s += "Knowledge Gain: " + strconv.Itoa(m.book.KnowledgeIncrease) + "\n"
+	s += "This book increases your IQ by " + strconv.Itoa(m.book.IntelligenceIncrease) + " on your first read.\n"
+
+	return s
 }
