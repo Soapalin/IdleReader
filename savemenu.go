@@ -181,6 +181,7 @@ func LoadPlayerFromFile(filename string) (PlayerSave, error) {
 	if dec_err != nil {
 		log.Println("LoadPlayerFromFile | dec.Decode")
 		log.Println(playersave)
+		log.Println(dec_err)
 		return playersave, errors.New("save file not valid! Try another file")
 	}
 	playersave.Shop.LoadShopTable()

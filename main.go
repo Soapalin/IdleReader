@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -21,12 +20,6 @@ func main() {
 
 	// CreateAllBookLibBin()
 	// CreateAllGameItemBin()
-
-	currentUser, err := os.UserHomeDir()
-	if err != nil {
-		panic(err)
-	}
-	log.Println(currentUser)
 
 	p := tea.NewProgram(InitialRootModel(), tea.WithAltScreen())
 	if _, err := p.Run(); err != nil {

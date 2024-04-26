@@ -212,7 +212,7 @@ func InitShop() Shop {
 	}
 
 	n = 0
-	for n < 2 {
+	for n < 1 {
 		randomIndex := rand.Intn(len(AllGameItems.Items) - 1)
 		if !items.ContainsItem(AllGameItems.Items[randomIndex]) {
 			items.AddItem(AllGameItems.Items[randomIndex])

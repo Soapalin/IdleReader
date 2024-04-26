@@ -3,12 +3,14 @@ package main
 import (
 	"game/engine/theme"
 	"log"
+	"os"
 	"strconv"
 	"time"
 
 	"github.com/charmbracelet/bubbles/progress"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"golang.org/x/term"
 )
 
 type DashboardModel struct {
@@ -20,6 +22,8 @@ type DashboardModel struct {
 	cr_cursor    int
 	bs_cursor    int
 	bookChange   bool
+	width        int
+	height       int
 }
 
 func TabBorder(left, middle, right string) lipgloss.Border {
@@ -45,6 +49,8 @@ func InitialDashboardModel(ps *PlayerSave, activeTab int, bs_cursor int) Dashboa
 	for i := range prog {
 		prog[i] = progress.New(progress.WithDefaultGradient())
 	}
+	w, h, _ := term.GetSize(int(os.Stdout.Fd()))
+
 	return DashboardModel{
 		tabs:         tabs,
 		activeTab:    activeTab,
@@ -54,6 +60,8 @@ func InitialDashboardModel(ps *PlayerSave, activeTab int, bs_cursor int) Dashboa
 		cr_cursor:    0,
 		bs_cursor:    bs_cursor,
 		bookChange:   false,
+		width:        w,
+		height:       h,
 	}
 }
 
@@ -79,6 +87,10 @@ func tickCmd() tea.Cmd {
 	return tea.Tick(time.Second*1, func(t time.Time) tea.Msg {
 		return tickMsg(t)
 	})
+}
+
+func (m *DashboardModel) updateSize(w, h int) {
+	log.Println("updateSize")
 }
 
 func (m DashboardModel) Init() tea.Cmd {
@@ -180,13 +192,18 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case tea.WindowSizeMsg:
 		// m.width, m.height = msg.Width, msg.Height
-		m.ps.Shop.table.Width(msg.Width)
-		m.ps.Shop.table.Height(msg.Height)
+		// m.ps.Shop.table.Width(msg.Width)
+		// m.ps.Shop.table.Height(msg.Height)
 
 	case tickMsg:
 		var cmd []tea.Cmd
 		cmd = append(cmd, tickCmd())
 		m.ps.Shop.Update()
+		w, h, _ := term.GetSize(int(os.Stdout.Fd()))
+		if w != m.width || h != m.height {
+			m.updateSize(w, h)
+		}
+		cmd = append(cmd, func() tea.Msg { return tea.WindowSizeMsg{Width: w, Height: h} })
 
 		for i, id := range m.ps.Reader.CurrentReads.BookIDs {
 			r := &m.ps.Reader
@@ -242,7 +259,7 @@ func (m DashboardModel) TabsView() string {
 			tabRow = append(tabRow, inactiveTabStyle.Render(t))
 		}
 	}
-	return "\n" + lipgloss.JoinHorizontal(lipgloss.Top, tabRow...) + "\n"
+	return "\n" + lipgloss.JoinHorizontal(lipgloss.Top, tabRow...)
 }
 
 func (m *DashboardModel) View() string {
@@ -264,7 +281,7 @@ func (m *DashboardModel) View() string {
 	s += lipgloss.JoinHorizontal(lipgloss.Center, v1, v2)
 	s += "\n"
 
-	s += m.TabsView()
+	s += lipgloss.NewStyle().Width(m.width).Render(m.TabsView())
 
 	s += "\n"
 	switch m.activeTab {
@@ -287,5 +304,5 @@ func (m *DashboardModel) View() string {
 
 	s += m.errorMessage
 
-	return s
+	return lipgloss.NewStyle().Width(m.width).Height(m.height).Render(s)
 }
