@@ -55,6 +55,15 @@ func (l *Library) ContainsBook(book Book) bool {
 	return false
 }
 
+func (l *Library) ContainsBookByNameAndAuthor(book Book) bool {
+	for _, b := range l.Books {
+		if b.Author == book.Author && b.Name == book.Name {
+			return true
+		}
+	}
+	return false
+}
+
 func (l *Library) AddBookToLibrary(book Book) {
 	l.Books = append(l.Books, book)
 }

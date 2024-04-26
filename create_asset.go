@@ -60,8 +60,72 @@ func CreateAllGameItemBin() {
 	}
 }
 
-func UpdateAllBooksLibrary()     {}
-func UpdateAllGameItemDatabase() {}
+func UpdateAllBooksLibrary() {
+
+	existingLibrary := LoadAllBooksLibrary()
+	fullLibrary := AllBooksLibrary
+
+	for _, book := range fullLibrary.Books {
+		if !existingLibrary.ContainsBookByNameAndAuthor(book) {
+			existingLibrary.AddBookToLibrary(book)
+		}
+	}
+
+	f, err := os.Create("AllBooksLibrary.bin")
+	if err != nil {
+		log.Println("UpdateAllBooksLibrary | os.Create")
+		panic(err)
+	}
+
+	defer f.Close()
+
+	var buff bytes.Buffer
+	enc := gob.NewEncoder(&buff)
+
+	error_enc := enc.Encode(existingLibrary)
+	if error_enc != nil {
+		log.Println(error_enc)
+		panic(error_enc)
+	}
+
+	if _, err := f.Write(buff.Bytes()); err != nil {
+		panic(err)
+	}
+
+}
+func UpdateAllGameItemDatabase() {
+
+	existingItems := LoadAllGameItems()
+	fullItems := InitAllGameItemDatabase()
+
+	for _, item := range fullItems.Items {
+		if !existingItems.ContainsItemByName(item) {
+			existingItems.AddItem(item)
+		}
+	}
+
+	f, err := os.Create("AllGameItems.bin")
+	if err != nil {
+		log.Println("CreateAllGameItemBin | os.Create")
+		panic(err)
+	}
+
+	defer f.Close()
+
+	var buff bytes.Buffer
+	enc := gob.NewEncoder(&buff)
+
+	error_enc := enc.Encode(fullItems)
+	if error_enc != nil {
+		log.Println(error_enc)
+		panic(error_enc)
+	}
+
+	if _, err := f.Write(buff.Bytes()); err != nil {
+		panic(err)
+	}
+
+}
 
 func InitAllGameItemDatabase() GameItemDatabase {
 	items := []Item{
@@ -72,7 +136,7 @@ func InitAllGameItemDatabase() GameItemDatabase {
 			Cost:          10000,
 			IqRequirement: 1,
 			Bought:        false,
-			Effect:        nil,
+			Effect:        "",
 		},
 		{
 			ID:            uuid.New(),
@@ -81,7 +145,7 @@ func InitAllGameItemDatabase() GameItemDatabase {
 			Cost:          100,
 			IqRequirement: 1,
 			Bought:        false,
-			Effect:        nil,
+			Effect:        "",
 		},
 		{
 			ID:            uuid.New(),
@@ -90,7 +154,7 @@ func InitAllGameItemDatabase() GameItemDatabase {
 			Cost:          100,
 			IqRequirement: 1,
 			Bought:        false,
-			Effect:        nil,
+			Effect:        "",
 		},
 	}
 	return GameItemDatabase{
@@ -103,6 +167,30 @@ func InitAllBookLibrary() Library {
 		{
 			ID:                      uuid.New(),
 			Name:                    "The Poppy War",
+			Author:                  "R.F Kuang",
+			Progress:                0,
+			KnowledgeIncrease:       300,
+			KnowledgeRequirement:    150,
+			IntelligenceIncrease:    2,
+			IntelligenceRequirement: 70,
+			Pages:                   500,
+			Repeat:                  0,
+		},
+		{
+			ID:                      uuid.New(),
+			Name:                    "Dragon Republic",
+			Author:                  "R.F Kuang",
+			Progress:                0,
+			KnowledgeIncrease:       300,
+			KnowledgeRequirement:    150,
+			IntelligenceIncrease:    2,
+			IntelligenceRequirement: 70,
+			Pages:                   500,
+			Repeat:                  0,
+		},
+		{
+			ID:                      uuid.New(),
+			Name:                    "Yellow Face",
 			Author:                  "R.F Kuang",
 			Progress:                0,
 			KnowledgeIncrease:       300,
@@ -211,6 +299,30 @@ func InitAllBookLibrary() Library {
 		{
 			ID:                      uuid.New(),
 			Name:                    "IQ Cheat Book",
+			Author:                  "Lucien",
+			Progress:                0,
+			KnowledgeIncrease:       10,
+			KnowledgeRequirement:    150,
+			IntelligenceIncrease:    100,
+			IntelligenceRequirement: 40,
+			Pages:                   20,
+			Repeat:                  0,
+		},
+		{
+			ID:                      uuid.New(),
+			Name:                    "IQ Cheat Book I",
+			Author:                  "Lucien",
+			Progress:                0,
+			KnowledgeIncrease:       10,
+			KnowledgeRequirement:    150,
+			IntelligenceIncrease:    100,
+			IntelligenceRequirement: 40,
+			Pages:                   20,
+			Repeat:                  0,
+		},
+		{
+			ID:                      uuid.New(),
+			Name:                    "IQ Cheat Book II",
 			Author:                  "Lucien",
 			Progress:                0,
 			KnowledgeIncrease:       10,

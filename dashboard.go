@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/charmbracelet/bubbles/progress"
+	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"golang.org/x/term"
@@ -24,6 +25,7 @@ type DashboardModel struct {
 	bookChange   bool
 	width        int
 	height       int
+	spinner      spinner.Model
 }
 
 func TabBorder(left, middle, right string) lipgloss.Border {
@@ -51,6 +53,11 @@ func InitialDashboardModel(ps *PlayerSave, activeTab int, bs_cursor int) Dashboa
 	}
 	w, h, _ := term.GetSize(int(os.Stdout.Fd()))
 
+	s := spinner.New()
+	s.Spinner = spinner.Dot
+	s.Style = theme.SpinnerStyle
+	s.Spinner.FPS = time.Millisecond * 500
+
 	return DashboardModel{
 		tabs:         tabs,
 		activeTab:    activeTab,
@@ -62,6 +69,7 @@ func InitialDashboardModel(ps *PlayerSave, activeTab int, bs_cursor int) Dashboa
 		bookChange:   false,
 		width:        w,
 		height:       h,
+		spinner:      s,
 	}
 }
 
@@ -104,6 +112,8 @@ func (m DashboardModel) Init() tea.Cmd {
 		}
 		cmd = append(cmd, m.progress[i].IncrPercent(cr_p.Progress))
 	}
+
+	cmd = append(cmd, m.spinner.Tick)
 
 	return tea.Batch(cmd...)
 }
@@ -234,6 +244,10 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 
 		return m, tea.Batch(cmds...)
+	case spinner.TickMsg:
+		var spinner_cmd tea.Cmd
+		m.spinner, spinner_cmd = m.spinner.Update(msg)
+		return m, spinner_cmd
 	}
 	return m, nil
 

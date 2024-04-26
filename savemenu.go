@@ -159,7 +159,31 @@ func LoadPlayerFromFile(filename string) (PlayerSave, error) {
 		panic(err)
 	}
 	defer f.Close()
-	data := make([]byte, 2048)
+
+	fi, err := f.Stat()
+	if err != nil {
+		panic(err)
+	}
+
+	// data := make([]byte, fi.Size())
+	// n, err := f.Read(data)
+
+	// if err != nil && err != io.EOF {
+	// 	log.Println("LoadPlayerFromFile | f.Read")
+	// 	log.Println(filename)
+	// 	panic(err)
+	// }
+	// if n == 0 {
+	// 	log.Println("n = 0")
+	// }
+	// var playersave PlayerSave
+
+	// err = json.Unmarshal(data, &playersave)
+	// if err != nil {
+	// 	log.Println("Unmarshal")
+	// 	panic(err)
+	// }
+	data := make([]byte, fi.Size())
 	n, err := f.Read(data)
 	if err != nil && err != io.EOF {
 		log.Println("LoadPlayerFromFile | f.Read")
@@ -185,7 +209,7 @@ func LoadPlayerFromFile(filename string) (PlayerSave, error) {
 		return playersave, errors.New("save file not valid! Try another file")
 	}
 	playersave.Shop.LoadShopTable()
-	log.Println("LoadPlayerFromFile | Decode Successful")
+	// log.Println("LoadPlayerFromFile | Decode Successful")
 	log.Println(playersave)
 
 	return playersave, nil
@@ -211,6 +235,29 @@ func (r *PlayerSave) SavePlayerToFile() {
 	if _, err := f.Write(buff.Bytes()); err != nil {
 		panic(err)
 	}
+
+	// g, err := os.Create(r.Filename)
+	// if err != nil {
+	// 	log.Println("SavePlayerToFile | os.Create")
+	// 	log.Println(r.Filename)
+	// 	panic(err)
+	// }
+	// defer g.Close()
+
+	// b, err := json.Marshal(*r)
+	// log.Println("SavePlayerString")
+	// log.Println(string(b))
+	// // var playersave PlayerSave
+	// // err = json.Unmarshal(b, &playersave)
+	// // log.Println(playersave)
+
+	// if err != nil {
+	// 	panic(err)
+	// }
+
+	// if _, err := g.Write(b); err != nil {
+	// 	panic(err)
+	// }
 }
 
 func InitialSaveMenuModel() SaveMenuModel {
@@ -380,7 +427,9 @@ func (m SaveMenuModel) View() string {
 
 	// The footer
 	s += "\n"
-	s += m.help.View(m.keys)
+	// s += m.help.View(m.keys)
+	s += "\n" + theme.HelpIcon.Render("?") + theme.HelpText.Render(" help • ")
+	s += theme.HelpIcon.Render("q") + theme.HelpText.Render(" quit")
 
 	// Send the UI for rendering
 	return s

@@ -23,7 +23,7 @@ type Item struct {
 	Cost          int
 	IqRequirement int
 	Bought        bool
-	Effect        func()
+	Effect        string
 }
 
 type GameItemDatabase struct {
@@ -33,6 +33,15 @@ type GameItemDatabase struct {
 func (g *GameItemDatabase) ContainsItem(item Item) bool {
 	for _, i := range g.Items {
 		if i.ID == item.ID {
+			return true
+		}
+	}
+	return false
+}
+
+func (g *GameItemDatabase) ContainsItemByName(item Item) bool {
+	for _, i := range g.Items {
+		if i.Name == item.Name {
 			return true
 		}
 	}

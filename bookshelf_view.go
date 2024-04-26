@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"game/engine/theme"
 	"log"
 	"strconv"
@@ -21,6 +22,9 @@ func (m *DashboardModel) BookshelfView() string {
 			}
 		}
 		s += b.Name + ", " + b.Author
+		if m.ps.Reader.CurrentReads.ContainsBook(b.ID) {
+			s += " " + m.spinner.View()
+		}
 		if m.bs_cursor == i {
 			s += theme.CursorArrow
 		}
@@ -34,6 +38,11 @@ func (m *DashboardModel) BookshelfView() string {
 		}
 		s += "\n"
 	}
+
+	s += "\n" + theme.HelpIcon.Render("r") + theme.HelpText.Render(" read book • ")
+	s += theme.HelpIcon.Render("enter") + theme.HelpText.Render(" book details • ")
+	s += theme.HelpIcon.Render("esc") + theme.HelpText.Render(" back • ")
+	s += theme.HelpIcon.Render("q") + theme.HelpText.Render(" quit")
 	return s
 }
 
@@ -65,6 +74,13 @@ func (m *DashboardModel) TrySwitchBook() {
 		}
 	}
 	m.errorMessage = "\n" + cr.String("DIGITS")
+	canRead := m.ps.Reader.CurrentReadLimit - len(cr.BookIDs)
+	digit := len(cr.BookIDs) + 1
+	for canRead > 0 {
+		m.errorMessage += fmt.Sprintf("%d. [select a book to read]\n", digit)
+		digit++
+		canRead--
+	}
 
 	m.errorMessage += "What book would you like to replace? (1-3)"
 	m.bookChange = true

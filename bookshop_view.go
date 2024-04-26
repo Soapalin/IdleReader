@@ -1,6 +1,7 @@
 package main
 
 import (
+	"game/engine/theme"
 	"log"
 
 	"github.com/charmbracelet/lipgloss"
@@ -15,7 +16,14 @@ func (m *DashboardModel) BookshopView() string {
 		}
 		if col == 0 || col == 1 {
 			if row == m.ps.Shop.TableIndex {
+				if row == m.ps.Shop.TableLen {
+					return lipgloss.NewStyle().Width(28).Foreground(lipgloss.Color("5"))
+				}
 				return lipgloss.NewStyle().Width(28).MarginBottom(1).Foreground(lipgloss.Color("5"))
+
+			}
+			if row == m.ps.Shop.TableLen {
+				return lipgloss.NewStyle().Width(28)
 			}
 			return lipgloss.NewStyle().Width(28).MarginBottom(1)
 		}
@@ -28,6 +36,9 @@ func (m *DashboardModel) BookshopView() string {
 	s += m.ps.Shop.table.String()
 
 	s += "\nLast Modified: " + m.ps.Shop.Modified.Format("02-01-2006 15:04:05")
+
+	s += "\n\n" + theme.HelpIcon.Render("enter") + theme.HelpText.Render(" buy • ")
+	s += theme.HelpIcon.Render("q") + theme.HelpText.Render(" quit")
 
 	return s
 }

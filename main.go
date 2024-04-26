@@ -19,7 +19,10 @@ func main() {
 	}
 
 	// CreateAllBookLibBin()
-	// CreateAllGameItemBin()
+	CreateAllGameItemBin()
+
+	UpdateAllBooksLibrary()
+	// UpdateAllGameItemDatabase()
 
 	p := tea.NewProgram(InitialRootModel(), tea.WithAltScreen())
 	if _, err := p.Run(); err != nil {

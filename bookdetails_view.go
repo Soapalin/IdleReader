@@ -41,5 +41,7 @@ func (m BookDetailsModel) View() string {
 	s += "Knowledge Gain: " + strconv.Itoa(m.book.KnowledgeIncrease) + "\n"
 	s += "This book increases your IQ by " + strconv.Itoa(m.book.IntelligenceIncrease) + " on your first read.\n"
 
+	s += "\n" + theme.HelpIcon.Render("esc") + theme.HelpText.Render(" back")
+
 	return s
 }
