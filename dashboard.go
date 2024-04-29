@@ -167,8 +167,9 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.TryBuy()
 			case 0:
 				if !m.bookChange {
-					if m.bs_cursor > len(m.ps.Reader.Library.Books) {
-						// Item Details Screen
+					if m.bs_cursor >= len(m.ps.Reader.Library.Books) {
+						switched := InitialBookDetailsModel(m.ps.Reader.Inventory.Items[m.bs_cursor-len(m.ps.Reader.Library.Books)], m)
+						return InitialRootModel().SwitchScreen(&switched)
 					} else {
 						switched := InitialBookDetailsModel(m.ps.Reader.Library.Books[m.bs_cursor], m)
 						return InitialRootModel().SwitchScreen(&switched)

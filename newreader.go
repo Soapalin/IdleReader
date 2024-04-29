@@ -122,6 +122,7 @@ func NewPlayerSave(name string, book string, author string) PlayerSave {
 			Repeat:                  0,
 		}
 		AllBooksLibrary.AddBookToLibrary(existingBook)
+		UpdateAllBooksLibrary()
 	}
 	playerLibrary.AddBookToLibrary(existingBook)
 	newReader := Reader{

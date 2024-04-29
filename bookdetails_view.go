@@ -7,21 +7,21 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-type BookDetailsModel struct {
+type ObjectDetailsModel struct {
 	cursor int
-	book   Book
+	object any
 	dm     *DashboardModel
 }
 
-func InitialBookDetailsModel(book Book, dm *DashboardModel) BookDetailsModel {
-	return BookDetailsModel{cursor: 0, book: book, dm: dm}
+func InitialBookDetailsModel(object any, dm *DashboardModel) ObjectDetailsModel {
+	return ObjectDetailsModel{cursor: 0, object: object, dm: dm}
 }
 
-func (m BookDetailsModel) Init() tea.Cmd {
+func (m ObjectDetailsModel) Init() tea.Cmd {
 	return nil
 }
 
-func (m BookDetailsModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m ObjectDetailsModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
@@ -32,16 +32,23 @@ func (m BookDetailsModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
-func (m BookDetailsModel) View() string {
+func (m ObjectDetailsModel) View() string {
 	s := ""
-	s += theme.Heading1.Render(m.book.Name)
-	s += "\n"
-	s += theme.Heading2.Render(m.book.Author)
-	s += "\n\n"
-	s += "Knowledge Gain: " + strconv.Itoa(m.book.KnowledgeIncrease) + "\n"
-	s += "This book increases your IQ by " + strconv.Itoa(m.book.IntelligenceIncrease) + " on your first read.\n"
+	switch obj := m.object.(type) {
+	case Book:
+		s += theme.Heading1.Render(obj.Name)
+		s += "\n"
+		s += theme.Heading2.Render(obj.Author)
+		s += "\n\n"
+		s += "Knowledge Gain: " + strconv.Itoa(obj.KnowledgeIncrease) + "\n"
+		s += "This book increases your IQ by " + strconv.Itoa(obj.IntelligenceIncrease) + " on your first read.\n"
 
-	s += "\n" + theme.HelpIcon.Render("esc") + theme.HelpText.Render(" back")
+	case Item:
+		s += theme.Heading1.Render(obj.Name)
+		s += "\n\n"
+		s += obj.Description
+		s += obj.Effect
+	}
+	return s + "\n\n" + theme.HelpIcon.Render("esc") + theme.HelpText.Render(" back")
 
-	return s
 }

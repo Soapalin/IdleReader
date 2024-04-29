@@ -15,7 +15,7 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		debugFile := filepath.Join(dir, "Documents", "debug.log")
+		debugFile := filepath.Join(dir, "Documents", "IdleReader", "debug.log")
 		f, err := tea.LogToFile(debugFile, "[DEBUG]")
 		if err != nil {
 			fmt.Println("fatal:", err)
@@ -25,9 +25,9 @@ func main() {
 	}
 
 	// CreateAllBookLibBin()
-	CreateAllGameItemBin()
+	// CreateAllGameItemBin()
 
-	UpdateAllBooksLibrary()
+	// UpdateAllBooksLibrary()
 	// UpdateAllGameItemDatabase()
 
 	p := tea.NewProgram(InitialRootModel(), tea.WithAltScreen())
