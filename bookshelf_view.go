@@ -33,7 +33,11 @@ func (m *DashboardModel) BookshelfView() string {
 		s += "\n"
 	}
 	s += "\n"
-	s += lipgloss.NewStyle().Width(m.width).AlignHorizontal(lipgloss.Position(0.5)).Render(m.bookPaginator.View())
+	paginatorView := lipgloss.NewStyle().Width(m.width).AlignHorizontal(lipgloss.Position(0.5)).Render(m.bookPaginator.View())
+	// pageNumber := fmt.Sprintf("<%d/%d>", m.bookPaginator.Page+1, m.bookPaginator.TotalPages)
+	pageNumber := "<" + strconv.Itoa(m.bookPaginator.Page+1) + "/" + strconv.Itoa(m.bookPaginator.TotalPages) + ">"
+	paginatorFull := lipgloss.JoinVertical(0, paginatorView, pageNumber)
+	s += lipgloss.NewStyle().Width(m.width).AlignHorizontal(lipgloss.Position(0.5)).Render(paginatorFull)
 
 	s += "\n" + theme.HelpIcon.Render("r") + theme.HelpText.Render(" read book • ")
 	s += theme.HelpIcon.Render("enter") + theme.HelpText.Render(" book details • ")
@@ -43,7 +47,6 @@ func (m *DashboardModel) BookshelfView() string {
 }
 
 func (m *DashboardModel) NextItemBookshelf() {
-	log.Println("NextItemBookshelf")
 	m.bs_cursor++
 	if m.bs_cursor%5 == 0 {
 		m.bookPaginator.Page++
@@ -55,7 +58,6 @@ func (m *DashboardModel) NextItemBookshelf() {
 }
 
 func (m *DashboardModel) PreviousItemBookshelf() {
-	log.Println("PreviousItemBookshelf")
 	m.bs_cursor--
 	if m.bs_cursor%5 == 8 {
 		m.bookPaginator.Page--
@@ -67,7 +69,6 @@ func (m *DashboardModel) PreviousItemBookshelf() {
 }
 
 func (m *DashboardModel) PreviousBookPage() {
-	log.Println("PreviousBookPage")
 	m.bookPaginator.Page--
 	m.bs_cursor, _ = m.bookPaginator.GetSliceBounds(len(m.ps.Reader.Library.Books))
 	if m.bookPaginator.Page < 0 {
@@ -77,7 +78,6 @@ func (m *DashboardModel) PreviousBookPage() {
 }
 
 func (m *DashboardModel) NextBookPage() {
-	log.Println("NextBookPage")
 	m.bookPaginator.Page++
 	m.bs_cursor, _ = m.bookPaginator.GetSliceBounds(len(m.ps.Reader.Library.Books))
 	if m.bookPaginator.Page >= m.bookPaginator.TotalPages {

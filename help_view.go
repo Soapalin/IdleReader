@@ -2,6 +2,7 @@ package main
 
 import (
 	"game/engine/theme"
+	"strconv"
 
 	"github.com/charmbracelet/lipgloss"
 	"github.com/muesli/reflow/wordwrap"
@@ -33,7 +34,10 @@ func (m *DashboardModel) HelpView() string {
 		s += item.View(m.width)
 		s += "\n"
 	}
-	s += lipgloss.NewStyle().Width(m.width).AlignHorizontal(lipgloss.Position(0.5)).Render(m.helpPaginator.View())
+	paginatorView := lipgloss.NewStyle().Width(m.width).AlignHorizontal(lipgloss.Position(0.5)).Render(m.helpPaginator.View())
+	pageNumber := "<" + strconv.Itoa(m.helpPaginator.Page+1) + "/" + strconv.Itoa(m.helpPaginator.TotalPages) + ">"
+	paginatorFull := lipgloss.JoinVertical(0, paginatorView, pageNumber)
+	s += lipgloss.NewStyle().Width(m.width).AlignHorizontal(lipgloss.Position(0.5)).Render(paginatorFull)
 	s += "\n" + theme.HelpIcon.Render("←") + theme.HelpText.Render(" previous • ")
 	s += theme.HelpIcon.Render("→") + theme.HelpText.Render(" next • ")
 	s += theme.HelpIcon.Render("esc / q") + theme.HelpText.Render(" quit")

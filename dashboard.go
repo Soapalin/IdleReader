@@ -123,7 +123,7 @@ func (m DashboardModel) Init() tea.Cmd {
 			panic(err)
 
 		}
-		cmd = append(cmd, m.progress[i].IncrPercent(cr_p.Progress))
+		cmd = append(cmd, m.progress[i].SetPercent(cr_p.Progress))
 	}
 
 	cmd = append(cmd, m.spinner.Tick)
@@ -257,11 +257,11 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			log.Println(cr_p)
 			if cr_p.Progress >= 1.0 {
 				r.FinishedBook(cr_p)
-				cmd = append(cmd, m.progress[i].DecrPercent(1))
+				cmd = append(cmd, m.progress[i].SetPercent(0))
 			} else {
 				r.IncreaseProgress(cr_p)
 
-				cmd = append(cmd, m.progress[i].IncrPercent(0.05))
+				cmd = append(cmd, m.progress[i].SetPercent(cr_p.Progress))
 				log.Println("Progression | " + strconv.FormatFloat(cr_p.Progress, 'f', -1, 64))
 			}
 		}

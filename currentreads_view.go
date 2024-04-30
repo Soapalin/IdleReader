@@ -31,10 +31,13 @@ func (m *DashboardModel) CurrentReadsView() string {
 			s += " ←"
 		}
 		s += "\n"
+		s += "\n"
 		// s += strconv.Itoa(cr.Progress) + "/100"
 		// s += "\n\n"
+		m.progress[i].Width = m.width - 3
 		s += "[" + m.progress[i].View() + "]"
 		s += "\n\n"
+		s += "\n"
 
 	}
 
