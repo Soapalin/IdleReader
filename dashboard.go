@@ -16,18 +16,20 @@ import (
 )
 
 type DashboardModel struct {
-	tabs         []string
-	activeTab    int
-	ps           PlayerSave
-	progress     []progress.Model
-	errorMessage string
-	cr_cursor    int
-	bs_cursor    int
-	bookChange   bool
-	width        int
-	height       int
-	spinner      spinner.Model
-	paginator    paginator.Model
+	tabs          []string
+	activeTab     int
+	ps            PlayerSave
+	progress      []progress.Model
+	errorMessage  string
+	cr_cursor     int
+	bs_cursor     int
+	i_cursor      int
+	bookChange    bool
+	width         int
+	height        int
+	spinner       spinner.Model
+	helpPaginator paginator.Model
+	bookPaginator paginator.Model
 }
 
 func TabBorder(left, middle, right string) lipgloss.Border {
@@ -47,8 +49,8 @@ var (
 	activeTabStyle    = inactiveTabStyle.Copy().Background(highlightColor).Border(activeTabBorder, true)
 )
 
-func InitialDashboardModel(ps *PlayerSave, activeTab int, bs_cursor int) DashboardModel {
-	tabs := []string{"My Bookshelf", "Current Reads", "Bookshop", "Library", "Book Club", "Help", "Exit"}
+func InitialDashboardModel(ps *PlayerSave, activeTab int, bs_cursor int, i_cursor int) DashboardModel {
+	tabs := []string{"My Bookshelf", "Current Reads", "Bookshop", "Library", "Inventory", "Help", "Exit"}
 	prog := make([]progress.Model, 3)
 	for i := range prog {
 		prog[i] = progress.New(progress.WithDefaultGradient())
@@ -60,35 +62,40 @@ func InitialDashboardModel(ps *PlayerSave, activeTab int, bs_cursor int) Dashboa
 	s.Style = theme.SpinnerStyle
 	s.Spinner.FPS = time.Millisecond * 500
 
-	p := paginator.New()
-	p.Type = paginator.Dots
-	p.PerPage = 1
-	p.ActiveDot = theme.ActiveDotPaginator
-	p.InactiveDot = theme.InactiveDotPaginator
-	p.SetTotalPages(len(HelpSection))
+	hp := paginator.New()
+	hp.Type = paginator.Dots
+	hp.PerPage = 1
+	hp.ActiveDot = theme.ActiveDotPaginator
+	hp.InactiveDot = theme.InactiveDotPaginator
+	hp.SetTotalPages(len(HelpSection))
+
+	bp := paginator.New()
+	bp.Type = paginator.Dots
+	bp.PerPage = 5
+	bp.ActiveDot = theme.ActiveDotPaginator
+	bp.InactiveDot = theme.InactiveDotPaginator
+	bp.SetTotalPages(len(ps.Reader.Library.Books))
 
 	return DashboardModel{
-		tabs:         tabs,
-		activeTab:    activeTab,
-		ps:           *ps,
-		progress:     prog,
-		errorMessage: "",
-		cr_cursor:    0,
-		bs_cursor:    bs_cursor,
-		bookChange:   false,
-		width:        w,
-		height:       h,
-		spinner:      s,
-		paginator:    p,
+		tabs:          tabs,
+		activeTab:     activeTab,
+		ps:            *ps,
+		progress:      prog,
+		errorMessage:  "",
+		cr_cursor:     0,
+		bs_cursor:     bs_cursor,
+		i_cursor:      i_cursor,
+		bookChange:    false,
+		width:         w,
+		height:        h,
+		spinner:       s,
+		helpPaginator: hp,
+		bookPaginator: bp,
 	}
 }
 
 func (m *DashboardModel) LibraryView() string {
 	return "LibraryView"
-}
-
-func (m *DashboardModel) BookClubView() string {
-	return "BookClubView"
 }
 
 func (m *DashboardModel) ExitView() string {
@@ -156,6 +163,8 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.PreviousCurrentReads()
 			case 2:
 				m.ps.Shop.PreviousRow()
+			case 4:
+				m.PreviousItemInventory()
 			}
 
 		case tea.KeyDown.String():
@@ -166,6 +175,8 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.NextCurrentReads()
 			case 2:
 				m.ps.Shop.NextRow()
+			case 4:
+				m.NextItemInventory()
 			}
 		case tea.KeyEnter.String():
 			switch m.activeTab {
@@ -185,11 +196,15 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		case tea.KeyLeft.String():
 			switch m.activeTab {
+			case 0:
+				m.PreviousBookPage()
 			case 5:
 				m.PreviousHelpItem()
 			}
 		case tea.KeyRight.String():
 			switch m.activeTab {
+			case 0:
+				m.NextBookPage()
 			case 5:
 				m.NextHelpItem()
 			}
@@ -326,7 +341,7 @@ func (m *DashboardModel) View() string {
 	case 3:
 		s += m.LibraryView()
 	case 4:
-		s += m.BookClubView()
+		s += m.InventoryView()
 	case 5:
 		s += m.HelpView()
 	case 6:

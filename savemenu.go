@@ -346,7 +346,7 @@ func (m SaveMenuModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					if err != nil {
 						m.model_err = err.Error()
 					} else {
-						switched := InitialDashboardModel(&playersave, 1, 0)
+						switched := InitialDashboardModel(&playersave, 1, 0, 0)
 						return InitialRootModel().SwitchScreen(&switched)
 					}
 
@@ -365,7 +365,7 @@ func (m SaveMenuModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 							if err != nil {
 								m.model_err = err.Error()
 							} else {
-								switched := InitialDashboardModel(&playersave, 1, 0)
+								switched := InitialDashboardModel(&playersave, 1, 0, 0)
 								return InitialRootModel().SwitchScreen(&switched)
 							}
 						} else if errors.Is(err, os.ErrNotExist) {

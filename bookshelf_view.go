@@ -7,37 +7,33 @@ import (
 	"strconv"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 )
 
 func (m *DashboardModel) BookshelfView() string {
 	s := theme.Heading1.Render("Books") + "\n"
-	for i, b := range m.ps.Reader.Library.Books {
+	start, end := m.bookPaginator.GetSliceBounds(len(m.ps.Reader.Library.Books))
+	for i, b := range m.ps.Reader.Library.Books[start:end] {
 		if b.Repeat > 0 {
-			s += "✅"
+			s += "✅ "
 		} else {
 			if b.Progress > 0 {
-				s += "📖"
+				s += "📖 "
 			} else {
-				s += "📓"
+				s += "📓 "
 			}
 		}
 		s += b.Name + ", " + b.Author
 		if m.ps.Reader.CurrentReads.ContainsBook(b.ID) {
 			s += " " + m.spinner.View()
 		}
-		if m.bs_cursor == i {
+		if m.bs_cursor%5 == i {
 			s += theme.CursorArrow
 		}
 		s += "\n"
 	}
-	s += theme.Heading1.Render("Inventory") + "\n"
-	for index, i := range m.ps.Reader.Inventory.Items {
-		s += "• " + i.Name
-		if m.bs_cursor == (len(m.ps.Reader.Library.Books) + index) {
-			s += theme.CursorArrow
-		}
-		s += "\n"
-	}
+	s += "\n"
+	s += lipgloss.NewStyle().Width(m.width).AlignHorizontal(lipgloss.Position(0.5)).Render(m.bookPaginator.View())
 
 	s += "\n" + theme.HelpIcon.Render("r") + theme.HelpText.Render(" read book • ")
 	s += theme.HelpIcon.Render("enter") + theme.HelpText.Render(" book details • ")
@@ -47,15 +43,45 @@ func (m *DashboardModel) BookshelfView() string {
 }
 
 func (m *DashboardModel) NextItemBookshelf() {
+	log.Println("NextItemBookshelf")
 	m.bs_cursor++
-	if m.bs_cursor >= len(m.ps.Reader.Inventory.Items)+len(m.ps.Reader.Library.Books) {
+	if m.bs_cursor%5 == 0 {
+		m.bookPaginator.Page++
+	}
+	if m.bs_cursor >= len(m.ps.Reader.Library.Books) {
 		m.bs_cursor = 0
+		m.bookPaginator.Page = 0
 	}
 }
 
 func (m *DashboardModel) PreviousItemBookshelf() {
+	log.Println("PreviousItemBookshelf")
 	m.bs_cursor--
+	if m.bs_cursor%5 == 8 {
+		m.bookPaginator.Page--
+	}
 	if m.bs_cursor < 0 {
+		m.bs_cursor = 0
+		m.bookPaginator.Page = 0
+	}
+}
+
+func (m *DashboardModel) PreviousBookPage() {
+	log.Println("PreviousBookPage")
+	m.bookPaginator.Page--
+	m.bs_cursor, _ = m.bookPaginator.GetSliceBounds(len(m.ps.Reader.Library.Books))
+	if m.bookPaginator.Page < 0 {
+		m.bookPaginator.Page = 0
+		m.bs_cursor = 0
+	}
+}
+
+func (m *DashboardModel) NextBookPage() {
+	log.Println("NextBookPage")
+	m.bookPaginator.Page++
+	m.bs_cursor, _ = m.bookPaginator.GetSliceBounds(len(m.ps.Reader.Library.Books))
+	if m.bookPaginator.Page >= m.bookPaginator.TotalPages {
+		m.bookPaginator.Page = 0
 		m.bs_cursor = 0
 	}
 }

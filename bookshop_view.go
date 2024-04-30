@@ -38,7 +38,7 @@ func (m *DashboardModel) BookshopView() string {
 	s += "\nLast Modified: " + m.ps.Shop.Modified.Format("02-01-2006 15:04:05")
 
 	s += "\n\n" + theme.HelpIcon.Render("enter") + theme.HelpText.Render(" buy • ")
-	s += theme.HelpIcon.Render("q") + theme.HelpText.Render(" quit")
+	s += theme.HelpIcon.Render("esc / q") + theme.HelpText.Render(" quit")
 
 	return s
 }

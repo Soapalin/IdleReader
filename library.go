@@ -13,6 +13,13 @@ import (
 	"github.com/google/uuid"
 )
 
+type ReorderType int
+
+var (
+	Alphabetical        int = 0
+	AlphabeticalReverse int = 1
+)
+
 type Library struct {
 	Books []Book
 }

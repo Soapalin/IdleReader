@@ -182,7 +182,7 @@ func (m NewReaderModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.focused == len(m.inputs)-1 {
 				playersave := NewPlayerSave(m.inputs[name].Value(), m.inputs[book].Value(), m.inputs[author].Value())
 				playersave.SavePlayerToFile()
-				switched := InitialDashboardModel(&playersave, 1, 0)
+				switched := InitialDashboardModel(&playersave, 1, 0, 0)
 				return InitialRootModel().SwitchScreen(&switched)
 			}
 
