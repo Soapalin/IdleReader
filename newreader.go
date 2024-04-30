@@ -144,12 +144,7 @@ func NewPlayerSave(name string, book string, author string) PlayerSave {
 	if err != nil {
 		panic(err)
 	}
-	dir += "\\Documents\\IdleReader"
-	err = os.MkdirAll(dir, os.ModePerm)
-	if err != nil {
-		panic(err)
-	}
-	dir = filepath.Join(dir, newReader.Name+"_"+newReader.ID.String()+"_Reader_Save.bin")
+	dir = filepath.Join(dir, "Documents", "IdleReader", newReader.Name+"_"+newReader.ID.String()+"_Reader_Save.bin")
 	log.Println("NewPlayerSave | " + dir)
 	return PlayerSave{
 		Reader:   newReader,

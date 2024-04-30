@@ -47,6 +47,7 @@ func (m ObjectDetailsModel) View() string {
 		s += theme.Heading1.Render(obj.Name)
 		s += "\n\n"
 		s += obj.Description
+		s += "\n"
 		s += obj.Effect
 	}
 	return s + "\n\n" + theme.HelpIcon.Render("esc") + theme.HelpText.Render(" back")

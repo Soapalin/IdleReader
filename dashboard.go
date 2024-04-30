@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/charmbracelet/bubbles/paginator"
 	"github.com/charmbracelet/bubbles/progress"
 	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
@@ -26,6 +27,7 @@ type DashboardModel struct {
 	width        int
 	height       int
 	spinner      spinner.Model
+	paginator    paginator.Model
 }
 
 func TabBorder(left, middle, right string) lipgloss.Border {
@@ -58,6 +60,13 @@ func InitialDashboardModel(ps *PlayerSave, activeTab int, bs_cursor int) Dashboa
 	s.Style = theme.SpinnerStyle
 	s.Spinner.FPS = time.Millisecond * 500
 
+	p := paginator.New()
+	p.Type = paginator.Dots
+	p.PerPage = 1
+	p.ActiveDot = theme.ActiveDotPaginator
+	p.InactiveDot = theme.InactiveDotPaginator
+	p.SetTotalPages(len(HelpSection))
+
 	return DashboardModel{
 		tabs:         tabs,
 		activeTab:    activeTab,
@@ -70,11 +79,8 @@ func InitialDashboardModel(ps *PlayerSave, activeTab int, bs_cursor int) Dashboa
 		width:        w,
 		height:       h,
 		spinner:      s,
+		paginator:    p,
 	}
-}
-
-func (m *DashboardModel) HelpView() string {
-	return "HelpView"
 }
 
 func (m *DashboardModel) LibraryView() string {
@@ -176,6 +182,16 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					}
 				}
 
+			}
+		case tea.KeyLeft.String():
+			switch m.activeTab {
+			case 5:
+				m.PreviousHelpItem()
+			}
+		case tea.KeyRight.String():
+			switch m.activeTab {
+			case 5:
+				m.NextHelpItem()
 			}
 		case "r", "R":
 			switch m.activeTab {
@@ -296,7 +312,8 @@ func (m *DashboardModel) View() string {
 	s += lipgloss.JoinHorizontal(lipgloss.Center, v1, v2)
 	s += "\n"
 
-	s += lipgloss.NewStyle().Width(m.width).Render(m.TabsView())
+	s += lipgloss.NewStyle().Render(m.TabsView())
+	m.width = lipgloss.Width(s)
 
 	s += "\n"
 	switch m.activeTab {

@@ -28,3 +28,6 @@ var HelpIcon = lipgloss.NewStyle().Foreground(lipgloss.Color("#7B7B7B"))
 var HelpText = lipgloss.NewStyle().Foreground(lipgloss.Color("#424242"))
 
 var SpinnerStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("205"))
+
+var ActiveDotPaginator = lipgloss.NewStyle().Foreground(Pink).Render("•")
+var InactiveDotPaginator = lipgloss.NewStyle().Render("•")

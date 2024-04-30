@@ -15,7 +15,12 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		debugFile := filepath.Join(dir, "Documents", "IdleReader", "debug.log")
+		dir = filepath.Join(dir, "Documents", "IdleReader")
+		err = os.MkdirAll(dir, os.ModePerm)
+		if err != nil {
+			panic(err)
+		}
+		debugFile := filepath.Join(dir, "debug.log")
 		f, err := tea.LogToFile(debugFile, "[DEBUG]")
 		if err != nil {
 			fmt.Println("fatal:", err)
