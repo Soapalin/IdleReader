@@ -101,7 +101,6 @@ func (ps *PlayerSave) AlreadyOwned(id uuid.UUID) bool {
 	return false
 }
 
-// func GetLatestSave() PlayerSave {
 func GetLatestSave() string {
 	dir, err := os.UserHomeDir()
 	if err != nil {

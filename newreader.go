@@ -106,7 +106,7 @@ func InitialNewReaderModel() NewReaderModel {
 }
 
 func NewPlayerSave(name string, book string, author string) PlayerSave {
-	existingBook, err := AllBooksLibrary.FindBookByNameAuthor(author, book)
+	existingBook, err := DB.FindBookByNameAuthor(author, book)
 	var playerLibrary Library
 	if err != nil {
 		existingBook = Book{
@@ -121,8 +121,7 @@ func NewPlayerSave(name string, book string, author string) PlayerSave {
 			Pages:                   100,
 			Repeat:                  0,
 		}
-		AllBooksLibrary.AddBookToLibrary(existingBook)
-		UpdateAllBooksLibrary()
+		DB.InsertOrUpdateBook(existingBook)
 	}
 	playerLibrary.AddBookToLibrary(existingBook)
 	newReader := Reader{

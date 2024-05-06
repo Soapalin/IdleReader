@@ -11,15 +11,8 @@ import (
 func main() {
 	os.Setenv("DEBUG", "true")
 	if len(os.Getenv("DEBUG")) > 0 {
-		dir, err := os.UserHomeDir()
-		if err != nil {
-			panic(err)
-		}
-		dir = filepath.Join(dir, "Documents", "IdleReader")
-		err = os.MkdirAll(dir, os.ModePerm)
-		if err != nil {
-			panic(err)
-		}
+		dir := createDocumentFolder()
+
 		debugFile := filepath.Join(dir, "debug.log")
 		f, err := tea.LogToFile(debugFile, "[DEBUG]")
 		if err != nil {
@@ -27,6 +20,8 @@ func main() {
 			os.Exit(1)
 		}
 		defer f.Close()
+		DB.CreateAllBooksTable()
+		DB.CreateAllItemsTable()
 	}
 
 	// CreateAllBookLibBin()
@@ -41,4 +36,18 @@ func main() {
 		os.Exit(1)
 	}
 
+}
+
+func createDocumentFolder() string {
+	dir, err := os.UserHomeDir()
+	if err != nil {
+		panic(err)
+	}
+	dir = filepath.Join(dir, "Documents", "IdleReader")
+	err = os.MkdirAll(dir, os.ModePerm)
+	if err != nil {
+		panic(err)
+	}
+
+	return dir
 }

@@ -52,13 +52,6 @@ func (g *GameItemDatabase) AddItem(item Item) {
 	g.Items = append(g.Items, item)
 }
 
-// var AllGameItems = GameItemDatabase{
-// 	Items: []Item{
-// 		{uuid.New(), "Reading Glasses", "Increases Reading speed by 20%", 10000, 1, false, nil},
-// 		{uuid.New(), "Bookmark", "Know where you left your reading.", 100, 1, false, nil},
-// 		{uuid.New(), "Reading Light", "Everything is more clear. Your gain an additional 10% knowledge.", 100, 1, false, nil},
-// 	},
-// }
 
 var AllGameItems GameItemDatabase = LoadAllGameItems()
 
@@ -112,14 +105,6 @@ func (s *Shop) Buy(ps *PlayerSave) TransactionResult {
 
 }
 
-func GetItemByID(id uuid.UUID) Item {
-	for _, i := range AllGameItems.Items {
-		if i.ID == id {
-			return i
-		}
-	}
-	return Item{}
-}
 
 func (s *Shop) GetShopItemByIndex() uuid.UUID {
 	log.Println("GetShopItemByIndex | ")
@@ -210,11 +195,22 @@ func InitShop() Shop {
 
 	columns := []string{"Name", "Description", "IQ Required", "Cost"}
 	var rows [][]string
+	allBooks,err  := DB.GetAllBooks()
+
+	if err != nil {
+		log.Println(err)
+		panic(err)
+	}
+	allItems, err := DB.GetAllItems()
+	if err != nil {
+		log.Println(err)
+		panic(err)
+	}
 	for n < 4 {
-		randomIndex := rand.Intn(len(AllBooksLibrary.Books) - 1)
-		if !books.ContainsBook(AllBooksLibrary.Books[randomIndex]) {
-			books.AddBookToLibrary(AllBooksLibrary.Books[randomIndex])
-			b := AllBooksLibrary.Books[randomIndex]
+		randomIndex := rand.Intn(len(allBooks.Books) - 1)
+		if !books.ContainsBook(allBooks.Books[randomIndex]) {
+			books.AddBookToLibrary(allBooks.Books[randomIndex])
+			b := allBooks.Books[randomIndex]
 			rows = append(rows, []string{b.Name, b.Author, strconv.Itoa(b.IntelligenceRequirement), strconv.Itoa(b.KnowledgeRequirement)})
 			n += 1
 		}
@@ -222,10 +218,10 @@ func InitShop() Shop {
 
 	n = 0
 	for n < 1 {
-		randomIndex := rand.Intn(len(AllGameItems.Items) - 1)
-		if !items.ContainsItem(AllGameItems.Items[randomIndex]) {
-			items.AddItem(AllGameItems.Items[randomIndex])
-			i := AllGameItems.Items[randomIndex]
+		randomIndex := rand.Intn(len(allItems.Items) - 1)
+		if !items.ContainsItem(allItems.Items[randomIndex]) {
+			items.AddItem(allItems.Items[randomIndex])
+			i := allItems.Items[randomIndex]
 			rows = append(rows, []string{i.Name, i.Description, strconv.Itoa(i.IqRequirement), strconv.Itoa(i.Cost)})
 			n += 1
 		}
