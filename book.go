@@ -29,3 +29,8 @@ type Book struct {
 	Pages                   int
 	Repeat                  int
 }
+
+
+func (b *Book) String() string {
+	return b.Name + ", " + b.Author
+}

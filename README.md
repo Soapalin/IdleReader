@@ -14,15 +14,22 @@ Build an executable with `go build .`
 
 # Road to v0.1
 
-[] AllBooksLibrary migrating to SQLite
+[x] AllBooksLibrary migrating to SQLite
+[x] Exit View
 [] Fetch and add real books (use external API or web scraper)
+
+# Road to v0.2
+[] Auction feature
 [] Sort/Reorder book function in My Bookshelf
 [] Search Book function in My Bookshelf
-[] Find solution  backwards compatibility with PlayerSave gob 
+
+# Road to v0.3
+[] Algorithm with reading speed
+[] Add item effects
 
 # Road to v1.0 
-
+[] Find solution  backwards compatibility with PlayerSave gob 
 [] User Testing needed
-[] Auction feature
-[] Algorithm with reading speed
+
+# Road to v2.0 
 [] Find gameplay for prestige 

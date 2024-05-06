@@ -13,6 +13,8 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"golang.org/x/term"
+	"golang.org/x/text/language"
+    "golang.org/x/text/message"
 )
 
 type DashboardModel struct {
@@ -30,6 +32,8 @@ type DashboardModel struct {
 	spinner       spinner.Model
 	helpPaginator paginator.Model
 	bookPaginator paginator.Model
+	exitChoices []string
+	ex_cursor int
 }
 
 func TabBorder(left, middle, right string) lipgloss.Border {
@@ -50,7 +54,7 @@ var (
 )
 
 func InitialDashboardModel(ps *PlayerSave, activeTab int, bs_cursor int, i_cursor int) DashboardModel {
-	tabs := []string{"My Bookshelf", "Current Reads", "Bookshop", "Library", "Inventory", "Help", "Exit"}
+	tabs := []string{"My Bookshelf", "Current Reads", "Bookshop", "Auction", "Inventory", "Help", "Exit"}
 	prog := make([]progress.Model, 3)
 	for i := range prog {
 		prog[i] = progress.New(progress.WithDefaultGradient())
@@ -76,6 +80,9 @@ func InitialDashboardModel(ps *PlayerSave, activeTab int, bs_cursor int, i_curso
 	bp.InactiveDot = theme.InactiveDotPaginator
 	bp.SetTotalPages(len(ps.Reader.Library.Books))
 
+	exitChoices := []string{"Save & Go to Main Menu", "Save & Quit", "Quit without Saving"}
+
+
 	return DashboardModel{
 		tabs:          tabs,
 		activeTab:     activeTab,
@@ -91,16 +98,16 @@ func InitialDashboardModel(ps *PlayerSave, activeTab int, bs_cursor int, i_curso
 		spinner:       s,
 		helpPaginator: hp,
 		bookPaginator: bp,
+		exitChoices: exitChoices,
+		ex_cursor: 0,
 	}
 }
 
-func (m *DashboardModel) LibraryView() string {
-	return "LibraryView"
+func (m *DashboardModel) AuctionView() string {
+	return "Auction coming soon..."
 }
 
-func (m *DashboardModel) ExitView() string {
-	return "ExitView"
-}
+
 
 type tickMsg time.Time
 
@@ -165,6 +172,8 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.ps.Shop.PreviousRow()
 			case 4:
 				m.PreviousItemInventory()
+			case 6:
+				m.PreviousExitChoice()
 			}
 
 		case tea.KeyDown.String():
@@ -177,6 +186,8 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.ps.Shop.NextRow()
 			case 4:
 				m.NextItemInventory()
+			case 6:
+				m.NextExitChoice()
 			}
 		case tea.KeyEnter.String():
 			switch m.activeTab {
@@ -184,15 +195,29 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.TryBuy()
 			case 0:
 				if !m.bookChange {
-					if m.bs_cursor >= len(m.ps.Reader.Library.Books) {
-						switched := InitialBookDetailsModel(m.ps.Reader.Inventory.Items[m.bs_cursor-len(m.ps.Reader.Library.Books)], m)
-						return InitialRootModel().SwitchScreen(&switched)
-					} else {
-						switched := InitialBookDetailsModel(m.ps.Reader.Library.Books[m.bs_cursor], m)
-						return InitialRootModel().SwitchScreen(&switched)
-					}
+					switched := InitialBookDetailsModel(m.ps.Reader.Library.Books[m.bs_cursor], m)
+					return InitialRootModel().SwitchScreen(&switched)
 				}
+			case 4:
+				switched := InitialBookDetailsModel(m.ps.Reader.Inventory.Items[m.i_cursor], m)
+				return InitialRootModel().SwitchScreen(&switched)
+			case 6:
+				switch m.exitChoices[m.ex_cursor] {
+				case "Save & Go to Main Menu":
+					log.Println("Save & Go to Main Menu")
+					m.ps.SavePlayerToFile()
+					switched := InitialSaveMenuModel()
+					return InitialRootModel().SwitchScreen(&switched)
+				case "Save & Quit":
+					log.Println("Save & Quit")
+					m.ps.SavePlayerToFile()
+					return m, tea.Quit
+				case "Quit without Saving":
+					log.Println("Quit without Saving")
+					switched := InitialSaveMenuModel()
+					return InitialRootModel().SwitchScreen(&switched)
 
+				}
 			}
 		case tea.KeyLeft.String():
 			switch m.activeTab {
@@ -309,6 +334,8 @@ func (m DashboardModel) TabsView() string {
 }
 
 func (m *DashboardModel) View() string {
+	pf := message.NewPrinter(language.English)
+
 	r := m.ps.Reader
 	s := theme.Heading1.Render(r.Name)
 	s += "\n"
@@ -316,7 +343,8 @@ func (m *DashboardModel) View() string {
 	s += "Favourite Book: " + r.FavouriteBook + ", " + r.FavouriteAuthor
 	s += "\n"
 
-	k := "Knowledge: " + strconv.Itoa(r.Knowledge)
+
+	k := pf.Sprintf("Knowledge: %d",r.Knowledge)
 	iq := "IQ: " + strconv.Itoa(r.IQ) + " (" + r.IQ_Title() + ")"
 
 	p := "Prestige: " + strconv.Itoa(r.Prestige)
@@ -339,7 +367,7 @@ func (m *DashboardModel) View() string {
 	case 2:
 		s += m.BookshopView()
 	case 3:
-		s += m.LibraryView()
+		s += m.AuctionView()
 	case 4:
 		s += m.InventoryView()
 	case 5:

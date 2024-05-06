@@ -8,6 +8,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
+
 func main() {
 	os.Setenv("DEBUG", "true")
 	if len(os.Getenv("DEBUG")) > 0 {

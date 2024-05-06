@@ -14,6 +14,9 @@ import (
 
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/lipgloss/table"
+
+	"golang.org/x/text/language"
+    "golang.org/x/text/message"
 )
 
 type Item struct {
@@ -192,6 +195,8 @@ func InitShop() Shop {
 	n := 0
 	var books Library
 	var items GameItemDatabase
+	pf := message.NewPrinter(language.English)
+
 
 	columns := []string{"Name", "Description", "IQ Required", "Cost"}
 	var rows [][]string
@@ -211,7 +216,7 @@ func InitShop() Shop {
 		if !books.ContainsBook(allBooks.Books[randomIndex]) {
 			books.AddBookToLibrary(allBooks.Books[randomIndex])
 			b := allBooks.Books[randomIndex]
-			rows = append(rows, []string{b.Name, b.Author, strconv.Itoa(b.IntelligenceRequirement), strconv.Itoa(b.KnowledgeRequirement)})
+			rows = append(rows, []string{b.Name, b.Author, pf.Sprintf("%d", b.IntelligenceRequirement), pf.Sprintf("%d", b.KnowledgeRequirement)})
 			n += 1
 		}
 	}
@@ -222,7 +227,7 @@ func InitShop() Shop {
 		if !items.ContainsItem(allItems.Items[randomIndex]) {
 			items.AddItem(allItems.Items[randomIndex])
 			i := allItems.Items[randomIndex]
-			rows = append(rows, []string{i.Name, i.Description, strconv.Itoa(i.IqRequirement), strconv.Itoa(i.Cost)})
+			rows = append(rows, []string{i.Name, i.Description, pf.Sprintf("%d", i.IqRequirement), pf.Sprintf("%d", i.Cost)})
 			n += 1
 		}
 
