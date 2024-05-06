@@ -30,20 +30,18 @@ type Reader struct {
 	FavouriteAuthor  string
 	Prestige         int
 	ReadCapacity     int
-	CurrentReads     Library
+	CurrentReads     CurrentReads
 	CurrentReadLimit int
 	ReadingSpeed     int
+	Library          Library
+	Inventory        GameItemDatabase
 }
 
 func (r *Reader) ReadingIncrease() {
 
 }
-func (r *Reader) IncreaseProgress(bookID uuid.UUID) {
-	for _, b := range r.CurrentReads.Books {
-		if b.ID == bookID {
-			b.Progress += 0.05
-		}
-	}
+func (r *Reader) IncreaseProgress(book *Book) {
+	book.Progress += 0.05
 }
 
 func (r *Reader) SwitchBook(index int, bookID uuid.UUID) error {
@@ -58,21 +56,15 @@ func (r *Reader) DecreaseKnowledge(amount int) {
 	r.Knowledge = r.Knowledge - amount
 }
 
-func (r *Reader) FinishedBook(bookID uuid.UUID) {
-	log.Println("FinishedBook")
-	for i, b := range r.CurrentReads.Books {
-		if b.ID == bookID {
-			b_p := &r.CurrentReads.Books[i]
-			if b_p.Repeat == 0 {
-				r.IncreaseIQ(b_p.IntelligenceIncrease)
-			}
-			log.Println("FinishedBook | Repeat: " + strconv.Itoa(b_p.Repeat))
-			b_p.Repeat += 1
-			r.IncreaseKnowledge(b_p.KnowledgeIncrease)
-			b_p.Progress = 0
-			//TODO: less knowledge earned when he book has been read many times
-		}
+func (r *Reader) FinishedBook(book *Book) {
+	if book.Repeat == 0 {
+		r.IncreaseIQ(book.IntelligenceIncrease)
 	}
+	log.Println("FinishedBook | Repeat: " + strconv.Itoa(book.Repeat))
+	book.Repeat += 1
+	r.IncreaseKnowledge(book.KnowledgeIncrease)
+	book.Progress = 0
+
 }
 
 func (r *Reader) IncreaseKnowledge(amount int) {

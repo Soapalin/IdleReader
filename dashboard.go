@@ -2,23 +2,38 @@ package main
 
 import (
 	"game/engine/theme"
+	"log"
+	"os"
 	"strconv"
 	"time"
 
+	"github.com/charmbracelet/bubbles/paginator"
 	"github.com/charmbracelet/bubbles/progress"
+	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"golang.org/x/term"
+	"golang.org/x/text/language"
+    "golang.org/x/text/message"
 )
 
 type DashboardModel struct {
-	tabs         []string
-	activeTab    int
-	ps           PlayerSave
-	progress     []progress.Model
-	errorMessage string
-	cr_cursor    int
-	bs_cursor    int
-	bookChange   bool
+	tabs          []string
+	activeTab     int
+	ps            PlayerSave
+	progress      []progress.Model
+	errorMessage  string
+	cr_cursor     int
+	bs_cursor     int
+	i_cursor      int
+	bookChange    bool
+	width         int
+	height        int
+	spinner       spinner.Model
+	helpPaginator paginator.Model
+	bookPaginator paginator.Model
+	exitChoices []string
+	ex_cursor int
 }
 
 func TabBorder(left, middle, right string) lipgloss.Border {
@@ -38,39 +53,61 @@ var (
 	activeTabStyle    = inactiveTabStyle.Copy().Background(highlightColor).Border(activeTabBorder, true)
 )
 
-func InitialDashboardModel(ps *PlayerSave) DashboardModel {
-	tabs := []string{"My Bookshelf", "Current Reads", "Bookshop", "Library", "Book Club", "Help", "Exit"}
+func InitialDashboardModel(ps *PlayerSave, activeTab int, bs_cursor int, i_cursor int) DashboardModel {
+	tabs := []string{"My Bookshelf", "Current Reads", "Bookshop", "Auction", "Inventory", "Help", "Exit"}
 	prog := make([]progress.Model, 3)
 	for i := range prog {
 		prog[i] = progress.New(progress.WithDefaultGradient())
 	}
+	w, h, _ := term.GetSize(int(os.Stdout.Fd()))
+
+	s := spinner.New()
+	s.Spinner = spinner.Dot
+	s.Style = theme.SpinnerStyle
+	s.Spinner.FPS = time.Millisecond * 500
+
+	hp := paginator.New()
+	hp.Type = paginator.Dots
+	hp.PerPage = 1
+	hp.ActiveDot = theme.ActiveDotPaginator
+	hp.InactiveDot = theme.InactiveDotPaginator
+	hp.SetTotalPages(len(HelpSection))
+
+	bp := paginator.New()
+	bp.Type = paginator.Dots
+	bp.PerPage = 5
+	bp.ActiveDot = theme.ActiveDotPaginator
+	bp.InactiveDot = theme.InactiveDotPaginator
+	bp.SetTotalPages(len(ps.Reader.Library.Books))
+
+	exitChoices := []string{"Save & Go to Main Menu", "Save & Quit", "Quit without Saving"}
+
+
 	return DashboardModel{
-		tabs:         tabs,
-		activeTab:    1,
-		ps:           *ps,
-		progress:     prog,
-		errorMessage: "",
-		cr_cursor:    0,
-		bs_cursor:    0,
-		bookChange:   false,
+		tabs:          tabs,
+		activeTab:     activeTab,
+		ps:            *ps,
+		progress:      prog,
+		errorMessage:  "",
+		cr_cursor:     0,
+		bs_cursor:     bs_cursor,
+		i_cursor:      i_cursor,
+		bookChange:    false,
+		width:         w,
+		height:        h,
+		spinner:       s,
+		helpPaginator: hp,
+		bookPaginator: bp,
+		exitChoices: exitChoices,
+		ex_cursor: 0,
 	}
 }
 
-func (m *DashboardModel) HelpView() string {
-	return "HelpView"
+func (m *DashboardModel) AuctionView() string {
+	return "Auction coming soon..."
 }
 
-func (m *DashboardModel) LibraryView() string {
-	return "LibraryView"
-}
 
-func (m *DashboardModel) BookClubView() string {
-	return "BookClubView"
-}
-
-func (m *DashboardModel) ExitView() string {
-	return "ExitView"
-}
 
 type tickMsg time.Time
 
@@ -80,13 +117,23 @@ func tickCmd() tea.Cmd {
 	})
 }
 
+func (m *DashboardModel) updateSize(w, h int) {
+	log.Println("updateSize")
+}
+
 func (m DashboardModel) Init() tea.Cmd {
 	var cmd []tea.Cmd
 	cmd = append(cmd, tickCmd())
-	for i := range m.ps.Reader.CurrentReads.Books {
-		cr_p := &m.ps.Reader.CurrentReads.Books[i]
-		cmd = append(cmd, m.progress[i].IncrPercent(cr_p.Progress))
+	for i, id := range m.ps.Reader.CurrentReads.BookIDs {
+		cr_p, err := m.ps.Reader.Library.GetBookPointerByID(id)
+		if err != nil {
+			panic(err)
+
+		}
+		cmd = append(cmd, m.progress[i].SetPercent(cr_p.Progress))
 	}
+
+	cmd = append(cmd, m.spinner.Tick)
 
 	return tea.Batch(cmd...)
 }
@@ -123,6 +170,10 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.PreviousCurrentReads()
 			case 2:
 				m.ps.Shop.PreviousRow()
+			case 4:
+				m.PreviousItemInventory()
+			case 6:
+				m.PreviousExitChoice()
 			}
 
 		case tea.KeyDown.String():
@@ -133,19 +184,54 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.NextCurrentReads()
 			case 2:
 				m.ps.Shop.NextRow()
+			case 4:
+				m.NextItemInventory()
+			case 6:
+				m.NextExitChoice()
 			}
 		case tea.KeyEnter.String():
 			switch m.activeTab {
 			case 2:
 				m.TryBuy()
 			case 0:
-				if m.bs_cursor > len(m.ps.Library.Books) {
-					// Item Details Screen
-				} else {
-					switched := InitialBookDetailsModel(m.ps.Library.Books[m.bs_cursor], &m.ps)
+				if !m.bookChange {
+					switched := InitialBookDetailsModel(m.ps.Reader.Library.Books[m.bs_cursor], m)
 					return InitialRootModel().SwitchScreen(&switched)
 				}
+			case 4:
+				switched := InitialBookDetailsModel(m.ps.Reader.Inventory.Items[m.i_cursor], m)
+				return InitialRootModel().SwitchScreen(&switched)
+			case 6:
+				switch m.exitChoices[m.ex_cursor] {
+				case "Save & Go to Main Menu":
+					log.Println("Save & Go to Main Menu")
+					m.ps.SavePlayerToFile()
+					switched := InitialSaveMenuModel()
+					return InitialRootModel().SwitchScreen(&switched)
+				case "Save & Quit":
+					log.Println("Save & Quit")
+					m.ps.SavePlayerToFile()
+					return m, tea.Quit
+				case "Quit without Saving":
+					log.Println("Quit without Saving")
+					switched := InitialSaveMenuModel()
+					return InitialRootModel().SwitchScreen(&switched)
 
+				}
+			}
+		case tea.KeyLeft.String():
+			switch m.activeTab {
+			case 0:
+				m.PreviousBookPage()
+			case 5:
+				m.PreviousHelpItem()
+			}
+		case tea.KeyRight.String():
+			switch m.activeTab {
+			case 0:
+				m.NextBookPage()
+			case 5:
+				m.NextHelpItem()
 			}
 		case "r", "R":
 			switch m.activeTab {
@@ -173,32 +259,52 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case tea.WindowSizeMsg:
 		// m.width, m.height = msg.Width, msg.Height
-		m.ps.Shop.table.Width(msg.Width)
-		m.ps.Shop.table.Height(msg.Height)
+		// m.ps.Shop.table.Width(msg.Width)
+		// m.ps.Shop.table.Height(msg.Height)
 
 	case tickMsg:
 		var cmd []tea.Cmd
 		cmd = append(cmd, tickCmd())
+		m.ps.Shop.Update()
+		w, h, _ := term.GetSize(int(os.Stdout.Fd()))
+		if w != m.width || h != m.height {
+			m.updateSize(w, h)
+		}
+		cmd = append(cmd, func() tea.Msg { return tea.WindowSizeMsg{Width: w, Height: h} })
 
-		for i := range m.ps.Reader.CurrentReads.Books {
-			cr_p := &m.ps.Reader.CurrentReads.Books[i]
+		for i, id := range m.ps.Reader.CurrentReads.BookIDs {
+			r := &m.ps.Reader
+			cr_p, err := r.Library.GetBookPointerByID(id)
+			if err != nil {
+				panic(err)
+			}
+			log.Println("tickMsg | cr: " + cr_p.Name)
+			log.Println(cr_p)
 			if cr_p.Progress >= 1.0 {
-				r := &m.ps.Reader
-				r.FinishedBook(cr_p.ID)
-				cmd = append(cmd, m.progress[i].DecrPercent(1))
-				// log.Println("Progression | " + strconv.FormatFloat(cr_p.Progress, 'f', -1, 64))
+				r.FinishedBook(cr_p)
+				cmd = append(cmd, m.progress[i].SetPercent(0))
 			} else {
-				cr_p.Progress += 0.05
-				cmd = append(cmd, m.progress[i].IncrPercent(0.05))
-				// log.Println("Progression | " + strconv.FormatFloat(cr_p.Progress, 'f', -1, 64))
+				r.IncreaseProgress(cr_p)
+
+				cmd = append(cmd, m.progress[i].SetPercent(cr_p.Progress))
+				log.Println("Progression | " + strconv.FormatFloat(cr_p.Progress, 'f', -1, 64))
 			}
 		}
 		return m, tea.Batch(cmd...)
 	// FrameMsg is sent when the progress bar wants to animate itself
 	case progress.FrameMsg:
-		progressModel, cmd := m.progress[0].Update(msg)
-		m.progress[0] = progressModel.(progress.Model)
-		return m, cmd
+		var cmds []tea.Cmd
+		for i := range m.progress {
+			progressModel, cmd := m.progress[i].Update(msg)
+			m.progress[i] = progressModel.(progress.Model)
+			cmds = append(cmds, cmd)
+		}
+
+		return m, tea.Batch(cmds...)
+	case spinner.TickMsg:
+		var spinner_cmd tea.Cmd
+		m.spinner, spinner_cmd = m.spinner.Update(msg)
+		return m, spinner_cmd
 	}
 	return m, nil
 
@@ -224,10 +330,12 @@ func (m DashboardModel) TabsView() string {
 			tabRow = append(tabRow, inactiveTabStyle.Render(t))
 		}
 	}
-	return "\n" + lipgloss.JoinHorizontal(lipgloss.Top, tabRow...) + "\n"
+	return "\n" + lipgloss.JoinHorizontal(lipgloss.Top, tabRow...)
 }
 
 func (m *DashboardModel) View() string {
+	pf := message.NewPrinter(language.English)
+
 	r := m.ps.Reader
 	s := theme.Heading1.Render(r.Name)
 	s += "\n"
@@ -235,7 +343,8 @@ func (m *DashboardModel) View() string {
 	s += "Favourite Book: " + r.FavouriteBook + ", " + r.FavouriteAuthor
 	s += "\n"
 
-	k := "Knowledge: " + strconv.Itoa(r.Knowledge)
+
+	k := pf.Sprintf("Knowledge: %d",r.Knowledge)
 	iq := "IQ: " + strconv.Itoa(r.IQ) + " (" + r.IQ_Title() + ")"
 
 	p := "Prestige: " + strconv.Itoa(r.Prestige)
@@ -246,7 +355,8 @@ func (m *DashboardModel) View() string {
 	s += lipgloss.JoinHorizontal(lipgloss.Center, v1, v2)
 	s += "\n"
 
-	s += m.TabsView()
+	s += lipgloss.NewStyle().Render(m.TabsView())
+	m.width = lipgloss.Width(s)
 
 	s += "\n"
 	switch m.activeTab {
@@ -255,12 +365,11 @@ func (m *DashboardModel) View() string {
 	case 1:
 		s += m.CurrentReadsView()
 	case 2:
-		m.ps.Shop.Update()
 		s += m.BookshopView()
 	case 3:
-		s += m.LibraryView()
+		s += m.AuctionView()
 	case 4:
-		s += m.BookClubView()
+		s += m.InventoryView()
 	case 5:
 		s += m.HelpView()
 	case 6:
@@ -270,5 +379,5 @@ func (m *DashboardModel) View() string {
 
 	s += m.errorMessage
 
-	return s
+	return lipgloss.NewStyle().Width(m.width).Height(m.height).Render(s)
 }

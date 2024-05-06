@@ -3,8 +3,10 @@ package main
 import (
 	"fmt"
 	"game/engine/theme"
+	"log"
 	"math/rand"
 	"os"
+	"path/filepath"
 
 	"github.com/google/uuid"
 
@@ -104,7 +106,7 @@ func InitialNewReaderModel() NewReaderModel {
 }
 
 func NewPlayerSave(name string, book string, author string) PlayerSave {
-	existingBook, err := AllBooksLibrary.FindBookByNameAuthor(author, book)
+	existingBook, err := DB.FindBookByNameAuthor(author, book)
 	var playerLibrary Library
 	if err != nil {
 		existingBook = Book{
@@ -119,7 +121,7 @@ func NewPlayerSave(name string, book string, author string) PlayerSave {
 			Pages:                   100,
 			Repeat:                  0,
 		}
-		AllBooksLibrary.AddBookToLibrary(existingBook)
+		DB.InsertOrUpdateBook(existingBook)
 	}
 	playerLibrary.AddBookToLibrary(existingBook)
 	newReader := Reader{
@@ -132,15 +134,21 @@ func NewPlayerSave(name string, book string, author string) PlayerSave {
 		Knowledge:        0,
 		Prestige:         0,
 		CurrentReadLimit: 1,
-		CurrentReads:     Library{Books: []Book{existingBook}},
+		CurrentReads:     CurrentReads{BookIDs: []uuid.UUID{existingBook.ID}},
 		ReadingSpeed:     1,
+		Library:          playerLibrary,
+		Inventory:        GameItemDatabase{make([]Item, 0)},
 	}
+	dir, err := os.UserHomeDir()
+	if err != nil {
+		panic(err)
+	}
+	dir = filepath.Join(dir, "Documents", "IdleReader", newReader.Name+"_"+newReader.ID.String()+"_Reader_Save.bin")
+	log.Println("NewPlayerSave | " + dir)
 	return PlayerSave{
-		Reader:    newReader,
-		Library:   playerLibrary,
-		Inventory: GameItemDatabase{make([]Item, 0)},
-		Filename:  "saves/" + newReader.Name + "_" + newReader.ID.String() + "_Reader_Save.bin",
-		Shop:      InitShop(),
+		Reader:   newReader,
+		Filename: dir,
+		Shop:     InitShop(),
 	}
 }
 
@@ -173,7 +181,7 @@ func (m NewReaderModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.focused == len(m.inputs)-1 {
 				playersave := NewPlayerSave(m.inputs[name].Value(), m.inputs[book].Value(), m.inputs[author].Value())
 				playersave.SavePlayerToFile()
-				switched := InitialDashboardModel(&playersave)
+				switched := InitialDashboardModel(&playersave, 1, 0, 0)
 				return InitialRootModel().SwitchScreen(&switched)
 			}
 

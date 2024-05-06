@@ -60,8 +60,72 @@ func CreateAllGameItemBin() {
 	}
 }
 
-func UpdateAllBooksLibrary()     {}
-func UpdateAllGameItemDatabase() {}
+func UpdateAllBooksLibrary() {
+
+	existingLibrary := LoadAllBooksLibrary()
+	fullLibrary := AllBooksLibrary
+
+	for _, book := range fullLibrary.Books {
+		if !existingLibrary.ContainsBookByNameAndAuthor(book) {
+			existingLibrary.AddBookToLibrary(book)
+		}
+	}
+
+	f, err := os.Create("AllBooksLibrary.bin")
+	if err != nil {
+		log.Println("UpdateAllBooksLibrary | os.Create")
+		panic(err)
+	}
+
+	defer f.Close()
+
+	var buff bytes.Buffer
+	enc := gob.NewEncoder(&buff)
+
+	error_enc := enc.Encode(existingLibrary)
+	if error_enc != nil {
+		log.Println(error_enc)
+		panic(error_enc)
+	}
+
+	if _, err := f.Write(buff.Bytes()); err != nil {
+		panic(err)
+	}
+
+}
+func UpdateAllGameItemDatabase() {
+
+	existingItems := LoadAllGameItems()
+	fullItems := InitAllGameItemDatabase()
+
+	for _, item := range fullItems.Items {
+		if !existingItems.ContainsItemByName(item) {
+			existingItems.AddItem(item)
+		}
+	}
+
+	f, err := os.Create("AllGameItems.bin")
+	if err != nil {
+		log.Println("CreateAllGameItemBin | os.Create")
+		panic(err)
+	}
+
+	defer f.Close()
+
+	var buff bytes.Buffer
+	enc := gob.NewEncoder(&buff)
+
+	error_enc := enc.Encode(fullItems)
+	if error_enc != nil {
+		log.Println(error_enc)
+		panic(error_enc)
+	}
+
+	if _, err := f.Write(buff.Bytes()); err != nil {
+		panic(err)
+	}
+
+}
 
 func InitAllGameItemDatabase() GameItemDatabase {
 	items := []Item{
@@ -72,7 +136,7 @@ func InitAllGameItemDatabase() GameItemDatabase {
 			Cost:          10000,
 			IqRequirement: 1,
 			Bought:        false,
-			Effect:        nil,
+			Effect:        "INCREASE_READING_SPEED_20",
 		},
 		{
 			ID:            uuid.New(),
@@ -81,16 +145,16 @@ func InitAllGameItemDatabase() GameItemDatabase {
 			Cost:          100,
 			IqRequirement: 1,
 			Bought:        false,
-			Effect:        nil,
+			Effect:        "KEEP_PROGRESS_ON_EXIT",
 		},
 		{
 			ID:            uuid.New(),
 			Name:          "Reading Light",
-			Description:   "Everything is more clear. Your gain an additional 10% knowledge.",
+			Description:   "Everything is clearer. Your gain an additional 10% knowledge.",
 			Cost:          100,
 			IqRequirement: 1,
 			Bought:        false,
-			Effect:        nil,
+			Effect:        "INCREASE_KNOWLEDGE_10",
 		},
 	}
 	return GameItemDatabase{
@@ -103,6 +167,30 @@ func InitAllBookLibrary() Library {
 		{
 			ID:                      uuid.New(),
 			Name:                    "The Poppy War",
+			Author:                  "R.F Kuang",
+			Progress:                0,
+			KnowledgeIncrease:       300,
+			KnowledgeRequirement:    150,
+			IntelligenceIncrease:    2,
+			IntelligenceRequirement: 70,
+			Pages:                   500,
+			Repeat:                  0,
+		},
+		{
+			ID:                      uuid.New(),
+			Name:                    "Dragon Republic",
+			Author:                  "R.F Kuang",
+			Progress:                0,
+			KnowledgeIncrease:       300,
+			KnowledgeRequirement:    150,
+			IntelligenceIncrease:    2,
+			IntelligenceRequirement: 70,
+			Pages:                   500,
+			Repeat:                  0,
+		},
+		{
+			ID:                      uuid.New(),
+			Name:                    "Yellow Face",
 			Author:                  "R.F Kuang",
 			Progress:                0,
 			KnowledgeIncrease:       300,
@@ -162,6 +250,30 @@ func InitAllBookLibrary() Library {
 		},
 		{
 			ID:                      uuid.New(),
+			Name:                    "Signals and Systems",
+			Author:                  "Peter McLean",
+			Progress:                0,
+			KnowledgeIncrease:       600,
+			KnowledgeRequirement:    300,
+			IntelligenceIncrease:    5,
+			IntelligenceRequirement: 100,
+			Pages:                   600,
+			Repeat:                  0,
+		},
+		{
+			ID:                      uuid.New(),
+			Name:                    "Embedded Software Introduction",
+			Author:                  "Peter McLean",
+			Progress:                0,
+			KnowledgeIncrease:       600,
+			KnowledgeRequirement:    300,
+			IntelligenceIncrease:    5,
+			IntelligenceRequirement: 110,
+			Pages:                   600,
+			Repeat:                  0,
+		},
+		{
+			ID:                      uuid.New(),
 			Name:                    "Child Book I",
 			Author:                  "Unknown",
 			Progress:                0,
@@ -186,7 +298,43 @@ func InitAllBookLibrary() Library {
 		},
 		{
 			ID:                      uuid.New(),
+			Name:                    "Child Book III",
+			Author:                  "Unknown",
+			Progress:                0,
+			KnowledgeIncrease:       120,
+			KnowledgeRequirement:    150,
+			IntelligenceIncrease:    1,
+			IntelligenceRequirement: 40,
+			Pages:                   40,
+			Repeat:                  0,
+		},
+		{
+			ID:                      uuid.New(),
 			Name:                    "Poem Book I",
+			Author:                  "Unknown",
+			Progress:                0,
+			KnowledgeIncrease:       120,
+			KnowledgeRequirement:    150,
+			IntelligenceIncrease:    1,
+			IntelligenceRequirement: 40,
+			Pages:                   20,
+			Repeat:                  0,
+		},
+		{
+			ID:                      uuid.New(),
+			Name:                    "Poem Book II",
+			Author:                  "Unknown",
+			Progress:                0,
+			KnowledgeIncrease:       120,
+			KnowledgeRequirement:    150,
+			IntelligenceIncrease:    1,
+			IntelligenceRequirement: 40,
+			Pages:                   20,
+			Repeat:                  0,
+		},
+		{
+			ID:                      uuid.New(),
+			Name:                    "Poem Book III",
 			Author:                  "Unknown",
 			Progress:                0,
 			KnowledgeIncrease:       120,
@@ -211,6 +359,30 @@ func InitAllBookLibrary() Library {
 		{
 			ID:                      uuid.New(),
 			Name:                    "IQ Cheat Book",
+			Author:                  "Lucien",
+			Progress:                0,
+			KnowledgeIncrease:       10,
+			KnowledgeRequirement:    150,
+			IntelligenceIncrease:    100,
+			IntelligenceRequirement: 40,
+			Pages:                   20,
+			Repeat:                  0,
+		},
+		{
+			ID:                      uuid.New(),
+			Name:                    "IQ Cheat Book I",
+			Author:                  "Lucien",
+			Progress:                0,
+			KnowledgeIncrease:       10,
+			KnowledgeRequirement:    150,
+			IntelligenceIncrease:    100,
+			IntelligenceRequirement: 40,
+			Pages:                   20,
+			Repeat:                  0,
+		},
+		{
+			ID:                      uuid.New(),
+			Name:                    "IQ Cheat Book II",
 			Author:                  "Lucien",
 			Progress:                0,
 			KnowledgeIncrease:       10,
