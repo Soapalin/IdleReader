@@ -12,24 +12,59 @@ First version of IdleReader:
 Build an executable with `go build .`
 
 
-# Road to v0.1
+## Description 
 
-[x] AllBooksLibrary migrating to SQLite
-[x] Exit View
-[] Fetch and add real books (use external API or web scraper)
+## Table of Contents
 
-# Road to v0.2
-[] Auction feature
-[] Sort/Reorder book function in My Bookshelf
-[] Search Book function in My Bookshelf
+## Installation
+While you can see the code and build an executable with `go build .`, the best way to install an IdleReader is to head to the release page and download the pre-built `.exe` at:
 
-# Road to v0.3
-[] Algorithm with reading speed
-[] Add item effects
+`placeholder-link.com`
 
-# Road to v1.0 
-[] Find solution  backwards compatibility with PlayerSave gob 
-[] User Testing needed
+To play the game, simply double click on the .exe that you have just installed.
 
-# Road to v2.0 
-[] Find gameplay for prestige 
+## Wiki
+
+The game wiki and FAQs can be found here:
+
+`placeholder-link.com`
+
+## Roadmap
+### Road to v0.1
+
+- [x] AllBooksLibrary migrating to SQLite
+- [x] Exit View
+- [] Fetch and add real books (use external API or web scraper)
+- [] Create adequate README.md
+- [] Create wiki
+- [] Create a release page for pre-built .exe
+
+### Road to v0.2
+- [] Auction feature with higher price
+- [] Sort/Reorder book function in My Bookshelf/Auction
+- [] Search Book function in My Bookshelf
+
+### Road to v0.3
+- [] Algorithm with reading speed
+- [] Add item effects
+
+### Road to v1.0 
+- [] Find solution  backwards compatibility with PlayerSave gob 
+- [] User Testing needed
+- [] Delete debug.log after several days or when it reaches a certain size
+
+### Road to v2.0 
+- [] Find gameplay for prestige 
+
+
+
+## License
+
+## Badges
+
+## Closing Thoughts & How To Contribute
+Thank you for checking out my text-based idle game, IdleReader!
+
+Since it is my first full game that I have decided to release, please let me know what I could improve on, game ideas, and if any books that you loved and and that I have missed. I'd be more than happy to add it to the game :)
+
+Till Next Time
