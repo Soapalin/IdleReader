@@ -8,7 +8,6 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-
 func main() {
 	os.Setenv("DEBUG", "true")
 	if len(os.Getenv("DEBUG")) > 0 {
@@ -24,12 +23,6 @@ func main() {
 		DB.CreateAllBooksTable()
 		DB.CreateAllItemsTable()
 	}
-
-	// CreateAllBookLibBin()
-	// CreateAllGameItemBin()
-
-	// UpdateAllBooksLibrary()
-	// UpdateAllGameItemDatabase()
 
 	p := tea.NewProgram(InitialRootModel(), tea.WithAltScreen())
 	if _, err := p.Run(); err != nil {

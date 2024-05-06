@@ -60,72 +60,72 @@ func CreateAllGameItemBin() {
 	}
 }
 
-func UpdateAllBooksLibrary() {
+// func UpdateAllBooksLibrary() {
 
-	existingLibrary := LoadAllBooksLibrary()
-	fullLibrary := AllBooksLibrary
+// 	existingLibrary := LoadAllBooksLibrary()
+// 	fullLibrary := AllBooksLibrary
 
-	for _, book := range fullLibrary.Books {
-		if !existingLibrary.ContainsBookByNameAndAuthor(book) {
-			existingLibrary.AddBookToLibrary(book)
-		}
-	}
+// 	for _, book := range fullLibrary.Books {
+// 		if !existingLibrary.ContainsBookByNameAndAuthor(book) {
+// 			existingLibrary.AddBookToLibrary(book)
+// 		}
+// 	}
 
-	f, err := os.Create("AllBooksLibrary.bin")
-	if err != nil {
-		log.Println("UpdateAllBooksLibrary | os.Create")
-		panic(err)
-	}
+// 	f, err := os.Create("AllBooksLibrary.bin")
+// 	if err != nil {
+// 		log.Println("UpdateAllBooksLibrary | os.Create")
+// 		panic(err)
+// 	}
 
-	defer f.Close()
+// 	defer f.Close()
 
-	var buff bytes.Buffer
-	enc := gob.NewEncoder(&buff)
+// 	var buff bytes.Buffer
+// 	enc := gob.NewEncoder(&buff)
 
-	error_enc := enc.Encode(existingLibrary)
-	if error_enc != nil {
-		log.Println(error_enc)
-		panic(error_enc)
-	}
+// 	error_enc := enc.Encode(existingLibrary)
+// 	if error_enc != nil {
+// 		log.Println(error_enc)
+// 		panic(error_enc)
+// 	}
 
-	if _, err := f.Write(buff.Bytes()); err != nil {
-		panic(err)
-	}
+// 	if _, err := f.Write(buff.Bytes()); err != nil {
+// 		panic(err)
+// 	}
 
-}
-func UpdateAllGameItemDatabase() {
+// }
+// func UpdateAllGameItemDatabase() {
 
-	existingItems := LoadAllGameItems()
-	fullItems := InitAllGameItemDatabase()
+// 	existingItems := LoadAllGameItems()
+// 	fullItems := InitAllGameItemDatabase()
 
-	for _, item := range fullItems.Items {
-		if !existingItems.ContainsItemByName(item) {
-			existingItems.AddItem(item)
-		}
-	}
+// 	for _, item := range fullItems.Items {
+// 		if !existingItems.ContainsItemByName(item) {
+// 			existingItems.AddItem(item)
+// 		}
+// 	}
 
-	f, err := os.Create("AllGameItems.bin")
-	if err != nil {
-		log.Println("CreateAllGameItemBin | os.Create")
-		panic(err)
-	}
+// 	f, err := os.Create("AllGameItems.bin")
+// 	if err != nil {
+// 		log.Println("CreateAllGameItemBin | os.Create")
+// 		panic(err)
+// 	}
 
-	defer f.Close()
+// 	defer f.Close()
 
-	var buff bytes.Buffer
-	enc := gob.NewEncoder(&buff)
+// 	var buff bytes.Buffer
+// 	enc := gob.NewEncoder(&buff)
 
-	error_enc := enc.Encode(fullItems)
-	if error_enc != nil {
-		log.Println(error_enc)
-		panic(error_enc)
-	}
+// 	error_enc := enc.Encode(fullItems)
+// 	if error_enc != nil {
+// 		log.Println(error_enc)
+// 		panic(error_enc)
+// 	}
 
-	if _, err := f.Write(buff.Bytes()); err != nil {
-		panic(err)
-	}
+// 	if _, err := f.Write(buff.Bytes()); err != nil {
+// 		panic(err)
+// 	}
 
-}
+// }
 
 func InitAllGameItemDatabase() GameItemDatabase {
 	items := []Item{

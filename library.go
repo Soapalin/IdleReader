@@ -1,14 +1,9 @@
 package main
 
 import (
-	"bytes"
-	"encoding/gob"
 	"errors"
-	"log"
 	"strconv"
 	"strings"
-
-	_ "embed"
 
 	"github.com/google/uuid"
 )
@@ -24,7 +19,7 @@ type Library struct {
 	Books []Book
 }
 
-var AllBooksLibrary Library = LoadAllBooksLibrary()
+// var AllBooksLibrary Library = LoadAllBooksLibrary()
 
 func (l *Library) String(preceding string) string {
 	s := ""
@@ -91,22 +86,4 @@ func (l *Library) GetBookPointerByID(id uuid.UUID) (*Book, error) {
 		}
 	}
 	return &Book{}, errors.New("book does not exist")
-}
-
-//go:embed AllBooksLibrary.bin
-var abl []byte
-
-func LoadAllBooksLibrary() Library {
-
-	buff := bytes.NewBuffer(abl)
-	dec := gob.NewDecoder(buff)
-
-	lib := Library{}
-
-	dec_err := dec.Decode(&lib)
-	if dec_err != nil {
-		log.Println("LoadAllBooksLibrary | dec.Decode")
-		panic(dec_err)
-	}
-	return lib
 }

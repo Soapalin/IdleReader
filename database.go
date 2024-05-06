@@ -31,7 +31,7 @@ func createDatabase(filePath string) Database {
 		file.Close()
 
 	}
-	DATABASE, _ = sql.Open("sqlite", filePath)
+	DATABASE, _ = sql.Open("sqlite", db_filepath)
 
 	return Database{
 		filepath: filePath,
@@ -203,10 +203,10 @@ func (d *Database) GetItemByID(id uuid.UUID) (Item, error) {
 	defer row.Close()
 
 	if row.Next() {
-		var i Item 
+		var i Item
 		var uuidstring string
 
-		er := row.Scan(&uuidstring, &i.Name, &i.Description, &i.Cost, &i.IqRequirement,  &i.Effect,&i.Bought)
+		er := row.Scan(&uuidstring, &i.Name, &i.Description, &i.Cost, &i.IqRequirement, &i.Effect, &i.Bought)
 		if er != nil {
 			log.Println("GetItemByID | row.Scan")
 			log.Println(er)
@@ -222,7 +222,7 @@ func (d *Database) GetAllItems() (GameItemDatabase, error) {
 	log.Println("GetAllItems |")
 	selectAllItems := "SELECT * FROM Items;"
 	row, err := d.db.Query(selectAllItems)
-	
+
 	if err != nil {
 		log.Println(err)
 		return GameItemDatabase{}, nil
@@ -230,10 +230,10 @@ func (d *Database) GetAllItems() (GameItemDatabase, error) {
 	defer row.Close()
 	var allGameItems GameItemDatabase
 	for row.Next() {
-		var i Item 
+		var i Item
 		var uuidstring string
 
-		er := row.Scan(&uuidstring, &i.Name, &i.Description, &i.Cost, &i.IqRequirement,  &i.Effect,&i.Bought)
+		er := row.Scan(&uuidstring, &i.Name, &i.Description, &i.Cost, &i.IqRequirement, &i.Effect, &i.Bought)
 		if er != nil {
 			log.Println("GetItemByID | row.Scan")
 			log.Println(er)
@@ -248,7 +248,7 @@ func (d *Database) GetAllItems() (GameItemDatabase, error) {
 
 func (d *Database) FindBookByNameAuthor(book, author string) (Book, error) {
 	log.Println("FindBookByNameAuthor |" + book + ", " + author)
-	selectBookByNameAndAuthor := "SELECT * FROM Books WHERE Name = '" +book + "' AND Author = '" + author + "';"
+	selectBookByNameAndAuthor := "SELECT * FROM Books WHERE Name = '" + book + "' AND Author = '" + author + "';"
 	log.Println(selectBookByNameAndAuthor)
 
 	row, err := d.db.Query(selectBookByNameAndAuthor)
