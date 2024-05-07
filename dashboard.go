@@ -14,7 +14,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 	"golang.org/x/term"
 	"golang.org/x/text/language"
-    "golang.org/x/text/message"
+	"golang.org/x/text/message"
 )
 
 type DashboardModel struct {
@@ -32,8 +32,8 @@ type DashboardModel struct {
 	spinner       spinner.Model
 	helpPaginator paginator.Model
 	bookPaginator paginator.Model
-	exitChoices []string
-	ex_cursor int
+	exitChoices   []string
+	ex_cursor     int
 }
 
 func TabBorder(left, middle, right string) lipgloss.Border {
@@ -62,7 +62,7 @@ func InitialDashboardModel(ps *PlayerSave, activeTab int, bs_cursor int, i_curso
 	w, h, _ := term.GetSize(int(os.Stdout.Fd()))
 
 	s := spinner.New()
-	s.Spinner = spinner.Dot
+	s.Spinner = spinner.Points
 	s.Style = theme.SpinnerStyle
 	s.Spinner.FPS = time.Millisecond * 500
 
@@ -82,7 +82,6 @@ func InitialDashboardModel(ps *PlayerSave, activeTab int, bs_cursor int, i_curso
 
 	exitChoices := []string{"Save & Go to Main Menu", "Save & Quit", "Quit without Saving"}
 
-
 	return DashboardModel{
 		tabs:          tabs,
 		activeTab:     activeTab,
@@ -98,16 +97,14 @@ func InitialDashboardModel(ps *PlayerSave, activeTab int, bs_cursor int, i_curso
 		spinner:       s,
 		helpPaginator: hp,
 		bookPaginator: bp,
-		exitChoices: exitChoices,
-		ex_cursor: 0,
+		exitChoices:   exitChoices,
+		ex_cursor:     0,
 	}
 }
 
 func (m *DashboardModel) AuctionView() string {
 	return "Auction coming soon..."
 }
-
-
 
 type tickMsg time.Time
 
@@ -343,8 +340,7 @@ func (m *DashboardModel) View() string {
 	s += "Favourite Book: " + r.FavouriteBook + ", " + r.FavouriteAuthor
 	s += "\n"
 
-
-	k := pf.Sprintf("Knowledge: %d",r.Knowledge)
+	k := pf.Sprintf("Knowledge: %d", r.Knowledge)
 	iq := "IQ: " + strconv.Itoa(r.IQ) + " (" + r.IQ_Title() + ")"
 
 	p := "Prestige: " + strconv.Itoa(r.Prestige)

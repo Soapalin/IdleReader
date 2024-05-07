@@ -53,8 +53,6 @@ func (g *GameItemDatabase) AddItem(item Item) {
 	g.Items = append(g.Items, item)
 }
 
-// var AllGameItems GameItemDatabase = LoadAllGameItems()
-
 type Shop struct {
 	Books      Library
 	Items      GameItemDatabase

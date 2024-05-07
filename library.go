@@ -19,8 +19,6 @@ type Library struct {
 	Books []Book
 }
 
-// var AllBooksLibrary Library = LoadAllBooksLibrary()
-
 func (l *Library) String(preceding string) string {
 	s := ""
 	if preceding == "DIGITS" {

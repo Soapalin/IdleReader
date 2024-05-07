@@ -48,9 +48,11 @@ Current version: v0.0.1
 
 - [x] AllBooksLibrary migrating to SQLite
 - [x] Exit View
-- [] Fetch and add real books (use external API or web scraper)
 - [x] Create adequate README.md
+- [] Fetch and add real books (use external API or web scraper)
+- [] Fix emoji not showing up in `.exe` release file
 - [] Create wiki
+- [] Update wiki on unicode rendering
 - [] Create a release page for pre-built .exe
 
 ### Road to v0.2

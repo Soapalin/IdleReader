@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
+	"os/exec"
 	"path/filepath"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -10,6 +12,7 @@ import (
 
 func main() {
 	os.Setenv("DEBUG", "true")
+
 	if len(os.Getenv("DEBUG")) > 0 {
 		dir := createDocumentFolder()
 
@@ -24,7 +27,21 @@ func main() {
 		DB.CreateAllItemsTable()
 	}
 
-	p := tea.NewProgram(InitialRootModel(), tea.WithAltScreen())
+	// encoding check
+	in, err := exec.Command("chcp", "65001").Output()
+	if err != nil {
+		panic(err)
+	}
+	log.Println("chcp | " + string(in))
+
+	// encoding check
+	in, err = exec.Command("chcp").Output()
+	if err != nil {
+		panic(err)
+	}
+	log.Println("chcp | " + string(in))
+
+	p := tea.NewProgram(InitialRootModel(), tea.WithAltScreen(), tea.WithMouseCellMotion())
 	if _, err := p.Run(); err != nil {
 		fmt.Printf("Alas, there's been an error: %v", err)
 		os.Exit(1)
