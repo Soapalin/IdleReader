@@ -15,12 +15,12 @@ func (m *DashboardModel) BookshelfView() string {
 	start, end := m.bookPaginator.GetSliceBounds(len(m.ps.Reader.Library.Books))
 	for i, b := range m.ps.Reader.Library.Books[start:end] {
 		if b.Repeat > 0 {
-			s += "✅ "
+			s += RenderEmojiOrFallback("✅", []string{"v"}) + " "
 		} else {
 			if b.Progress > 0 {
-				s += "📖 "
+				s += RenderEmojiOrFallback("📖", []string{"-"}) + " "
 			} else {
-				s += "📓 "
+				s += RenderEmojiOrFallback("📓", []string{"x"}) + " "
 			}
 		}
 		s += b.Name + ", " + b.Author
