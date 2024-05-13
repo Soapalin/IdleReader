@@ -51,7 +51,6 @@ Current version: v0.0.1
 - [x] AllBooksLibrary migrating to SQLite
 - [x] Exit View
 - [x] Create adequate README.md
-- [] Fetch and add real books (use external API or web scraper)
 - [] Create wiki
 - [] Update wiki on unicode rendering (use Windows Terminal if still using cmd.exe)
 - [x] Create a release page for pre-built .exe
@@ -62,11 +61,12 @@ Current version: v0.0.1
 - [] Search Book function in My Bookshelf
 
 ### Road to v0.3
-- [] Algorithm with reading speed
 - [] Add item effects
+- [] Fetch and add real books (use external API or web scraper)
+- [] Algorithm with reading speed
 
 ### Road to v1.0 
-- [] Find solution  backwards compatibility with PlayerSave gob 
+- [] Find solution backwards compatibility with PlayerSave gob 
 - [] User Testing needed
 - [] Delete debug.log after several days or when it reaches a certain size
 
