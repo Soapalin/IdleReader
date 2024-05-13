@@ -24,7 +24,7 @@ func (h *HelpItem) View(maxWidth int) string {
 
 var HelpSection []HelpItem = []HelpItem{
 	{"How do I play this game?", "Purchase, Read, Gain Knowlege and IQ, and finally collect your favourite books!"},
-	{"Where can I find an in-depth game guide?", "Head to our official website," + lipgloss.NewStyle().Foreground(theme.Pink).Render("{https://placeholder.com}")},
+	{"Where can I find an in-depth game guide?", "Head to our official wiki," + lipgloss.NewStyle().Foreground(theme.Pink).Render("{https://placeholder.com}")},
 }
 
 func (m *DashboardModel) HelpView() string {

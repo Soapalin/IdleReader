@@ -1,8 +1,6 @@
 package main
 
 import (
-	"bytes"
-	"encoding/gob"
 	"log"
 	"math/rand"
 	"strconv"
@@ -16,7 +14,7 @@ import (
 	"github.com/charmbracelet/lipgloss/table"
 
 	"golang.org/x/text/language"
-    "golang.org/x/text/message"
+	"golang.org/x/text/message"
 )
 
 type Item struct {
@@ -54,9 +52,6 @@ func (g *GameItemDatabase) ContainsItemByName(item Item) bool {
 func (g *GameItemDatabase) AddItem(item Item) {
 	g.Items = append(g.Items, item)
 }
-
-
-var AllGameItems GameItemDatabase = LoadAllGameItems()
 
 type Shop struct {
 	Books      Library
@@ -107,7 +102,6 @@ func (s *Shop) Buy(ps *PlayerSave) TransactionResult {
 	return unknownTransaction
 
 }
-
 
 func (s *Shop) GetShopItemByIndex() uuid.UUID {
 	log.Println("GetShopItemByIndex | ")
@@ -172,35 +166,15 @@ func (s *Shop) LoadShopTable() {
 	s.TableLen = len(rows)
 }
 
-//go:embed AllGameItems.bin
-var agi []byte
-
-func LoadAllGameItems() GameItemDatabase {
-	buff := bytes.NewBuffer(agi)
-	dec := gob.NewDecoder(buff)
-
-	gameItems := GameItemDatabase{}
-
-	dec_err := dec.Decode(&gameItems)
-	if dec_err != nil {
-		log.Println("LoadAllGameItems | dec.Decode")
-		log.Println(gameItems)
-		panic(dec_err)
-
-	}
-	return gameItems
-}
-
 func InitShop() Shop {
 	n := 0
 	var books Library
 	var items GameItemDatabase
 	pf := message.NewPrinter(language.English)
 
-
 	columns := []string{"Name", "Description", "IQ Required", "Cost"}
 	var rows [][]string
-	allBooks,err  := DB.GetAllBooks()
+	allBooks, err := DB.GetAllBooks()
 
 	if err != nil {
 		log.Println(err)

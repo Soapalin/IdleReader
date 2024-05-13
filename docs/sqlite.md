@@ -8,3 +8,4 @@ open persistent database
 
 `PRAGMA table_info(Books);`
 get column names of Books
+
