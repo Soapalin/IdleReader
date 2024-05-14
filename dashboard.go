@@ -102,10 +102,6 @@ func InitialDashboardModel(ps *PlayerSave, activeTab int, bs_cursor int, i_curso
 	}
 }
 
-func (m *DashboardModel) AuctionView() string {
-	return "Auction coming soon..."
-}
-
 type tickMsg time.Time
 
 func tickCmd() tea.Cmd {

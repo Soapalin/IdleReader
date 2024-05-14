@@ -63,21 +63,25 @@ func main() {
 
 }
 
+func PlatformPath(path string) string {
+	if SYSTEM == "windows" {
+		return filepath.Join(path, "Documents", "IdleReader")
+	} else if SYSTEM == "linux" {
+		return filepath.Join(path, ".IdleReader")
+	} else if SYSTEM == "darwin" {
+		// macOS
+		return filepath.Join(path, "Library", "Application Support", "IdleReader")
+	} else {
+		return filepath.Join(path, "Documents", "IdleReader")
+	}
+}
+
 func createDocumentFolder() string {
 	dir, err := os.UserHomeDir()
 	if err != nil {
 		panic(err)
 	}
-	if SYSTEM == "windows" {
-		dir = filepath.Join(dir, "Documents", "IdleReader")
-	} else if SYSTEM == "linux" {
-		dir = filepath.Join(dir, ".IdleReader")
-	} else if SYSTEM == "darwin" {
-		// macOS
-		dir = filepath.Join(dir, "Library", "Application Support", "IdleReader")
-	} else {
-		dir = filepath.Join(dir, "Documents", "IdleReader")
-	}
+	dir = PlatformPath(dir)
 
 	err = os.MkdirAll(dir, os.ModePerm)
 	if err != nil {
