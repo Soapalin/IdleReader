@@ -7,7 +7,7 @@ To play the game, head to the  <a href="#-installation">installation</a> section
 
 Start your journey with only your favourite book in-hand! By reading it, grow your Intelligence and Knowledge. Knowledge is the currency used in-game: use it wisely to purchase and collect your favourite books! Beware, some books have Intelligence requirements, and the only way to grow your IQ is to read different books (at least once). 
 
-Learn more about the <a href="#features">features</a> below or in explore our <a href="https://github.com/Soapalin/IdleReader/wiki/IdleReader-Wiki">wiki</a> page for in-depth game guides. 
+Learn more about the <a href="#features">features</a> below or in explore our <a href="https://github.com/Soapalin/IdleReader/wiki">wiki</a> page for in-depth game guides. 
 
 
 ## 📕 Features
