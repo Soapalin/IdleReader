@@ -51,8 +51,9 @@ Current version: v0.0.1
 - [x] AllBooksLibrary migrating to SQLite
 - [x] Exit View
 - [x] Create adequate README.md
-- [] Create wiki
-- [] Update wiki on unicode rendering (use Windows Terminal if still using cmd.exe)
+- [x] Create wiki
+- [x] Update wiki on unicode rendering (use Windows Terminal if still using cmd.exe)
+- [] Store saves/database in different path depending on OS
 - [x] Create a release page for pre-built .exe
 
 ### Road to v0.2
