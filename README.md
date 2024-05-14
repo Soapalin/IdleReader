@@ -25,7 +25,7 @@ For a stress-free installation, head to release page and download the latest ver
 
 To play the game, simply double click on the file that you have just downloaded.
 
-Note for Windows users: For best experience, install `Windows Terminal` (default as of Windows 11 22H2!). See in-depth guide <a href="">here</a>. You can still play the game without `Windows Terminal` but the default rendering will be a bit off (such as not having emojis available).
+Note for Windows users: For best experience, install `Windows Terminal` (default as of Windows 11 22H2!). See in-depth guide <a href="https://github.com/Soapalin/IdleReader/wiki/Installing-Windows-Terminal">here</a>. You can still play the game without `Windows Terminal` but the default rendering will be a bit off (such as not having emojis available).
 
 
 For advanced users, you can build your own binaries of the game:
@@ -38,7 +38,7 @@ For advanced users, you can build your own binaries of the game:
 
 The game wiki and FAQs can be found here:
 
-<a href="https://github.com/Soapalin/IdleReader/wiki/IdleReader-Wiki">IdleReader Wiki</a>
+<a href="https://github.com/Soapalin/IdleReader/wiki">IdleReader Wiki</a>
 
 This includes in-depth game guides and tutorials.
 
