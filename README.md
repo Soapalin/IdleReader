@@ -1,7 +1,7 @@
 # IdleReader: A Text-based Journey 📚📖
 Welcome to Idle Reader! Immerse yourself in this idle text-based game! Accumulate knowledge, grow your intelligence to purchase real in-game books. 
 <br>
-To play the game, head to the  <a href="#📕 Installation">installation</a> section down below or to the <a href="https://github.com/Soapalin/IdleReader/releases">release</a> page.
+To play the game, head to the  <a href="#[📕 Installation](https://github.com/Soapalin/IdleReader/blob/master/README.md#-installation)">installation</a> section down below or to the <a href="https://github.com/Soapalin/IdleReader/releases">release</a> page.
 
 ## 📕 Description 
 
