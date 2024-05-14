@@ -53,7 +53,7 @@ Current version: v0.0.1
 - [x] Create adequate README.md
 - [x] Create wiki
 - [x] Update wiki on unicode rendering (use Windows Terminal if still using cmd.exe)
-- [] Store saves/database in different path depending on OS
+- [x] Store saves/database in different path depending on OS
 - [x] Create a release page for pre-built .exe
 
 ### Road to v0.2
