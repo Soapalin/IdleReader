@@ -13,14 +13,16 @@ var Style = lipgloss.NewStyle().
 var Heading1 = lipgloss.NewStyle().
 	Bold(true).
 	Foreground(lipgloss.Color("5")).
-	PaddingTop(2)
+	PaddingTop(1)
 
 var Heading2 = lipgloss.NewStyle().
-	Foreground(lipgloss.Color("5"))
+	Foreground(HotPink)
 
 var InputStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("#FF06B7"))
 
+var HotPink = lipgloss.Color("#FF06B7")
 var Pink = lipgloss.Color("5")
+var White = lipgloss.Color("#F8F8F8")
 
 var CursorArrow = lipgloss.NewStyle().Foreground(Pink).Blink(true).Bold(true).Render(" ←")
 
