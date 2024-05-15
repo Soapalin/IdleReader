@@ -107,7 +107,7 @@ func GetLatestSave() string {
 		log.Println("GetLatestSave | os.UserHomeDir")
 		panic(err)
 	}
-	dir += "\\Documents\\IdleReader"
+	dir = PlatformPath(dir)
 
 	files, err := os.ReadDir(dir)
 	if err != nil {
@@ -207,7 +207,7 @@ func LoadPlayerFromFile(filename string) (PlayerSave, error) {
 		log.Println(dec_err)
 		return playersave, errors.New("save file not valid! Try another file")
 	}
-	playersave.Shop.LoadShopTable()
+	playersave.Shop.LoadShopTable(&playersave.Reader.Library)
 	// log.Println("LoadPlayerFromFile | Decode Successful")
 	log.Println(playersave)
 

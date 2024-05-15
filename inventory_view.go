@@ -17,10 +17,11 @@ func (m *DashboardModel) InventoryView() string {
 }
 
 func (m *DashboardModel) NextItemInventory() {
-	m.i_cursor++
-	if m.i_cursor >= len(m.ps.Reader.Inventory.Items) {
-		m.i_cursor = 0
+	if m.i_cursor >= len(m.ps.Reader.Inventory.Items)-1 {
+		return
 	}
+	m.i_cursor++
+
 }
 
 func (m *DashboardModel) PreviousItemInventory() {

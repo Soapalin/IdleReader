@@ -273,6 +273,88 @@ func (d *Database) FindBookByNameAuthor(book, author string) (Book, error) {
 	return Book{}, errors.New("Book not found")
 }
 
+func (d *Database) FindBooksContainsSingle(book, author string) (Library, error) {
+	log.Println("FindBooksContains |" + book + ", " + author)
+	selectBook := "SELECT * FROM Books WHERE Name LIKE '%" + book + "%' OR Author LIKE  '%" + author + "%';"
+
+	if author == "" && book == "" {
+		return Library{}, errors.New("error")
+	}
+	if author == "" {
+		selectBook = "SELECT * FROM Books WHERE Name LIKE '%" + book + "%';"
+	}
+	if book == "" {
+		selectBook = "SELECT * FROM Books WHERE Author LIKE '%" + author + "%';"
+	}
+
+	row, err := d.db.Query(selectBook)
+	if err != nil {
+		log.Println(err)
+		return Library{}, err
+	}
+	defer row.Close()
+
+	var allBooks Library
+	for row.Next() {
+		var b Book
+		var uuidstring string
+
+		er := row.Scan(&uuidstring, &b.Name, &b.Author, &b.Progress, &b.KnowledgeIncrease, &b.KnowledgeRequirement, &b.IntelligenceIncrease, &b.IntelligenceRequirement, &b.Pages, &b.Repeat)
+		if er != nil {
+			log.Println("FindBookByNameAuthor | row.Scan")
+			log.Println(er)
+			return Library{}, er
+		}
+		b.ID, _ = uuid.Parse(uuidstring)
+
+		allBooks.AddBookToLibrary(b)
+	}
+
+	return allBooks, nil
+
+}
+
+func (d *Database) FindBooksContainsBoth(book, author string) (Library, error) {
+	log.Println("FindBooksContains |" + book + ", " + author)
+	selectBook := "SELECT * FROM Books WHERE Name LIKE '%" + book + "%' AND Author LIKE  '%" + author + "%';"
+
+	if author == "" && book == "" {
+		return Library{}, errors.New("error")
+	}
+	if author == "" {
+		selectBook = "SELECT * FROM Books WHERE Name LIKE '%" + book + "%';"
+	}
+	if book == "" {
+		selectBook = "SELECT * FROM Books WHERE Author LIKE '%" + author + "%';"
+	}
+
+	row, err := d.db.Query(selectBook)
+	if err != nil {
+		log.Println(err)
+		return Library{}, err
+	}
+	defer row.Close()
+
+	var allBooks Library
+	for row.Next() {
+		var b Book
+		var uuidstring string
+
+		er := row.Scan(&uuidstring, &b.Name, &b.Author, &b.Progress, &b.KnowledgeIncrease, &b.KnowledgeRequirement, &b.IntelligenceIncrease, &b.IntelligenceRequirement, &b.Pages, &b.Repeat)
+		if er != nil {
+			log.Println("FindBookByNameAuthor | row.Scan")
+			log.Println(er)
+			return Library{}, er
+		}
+		b.ID, _ = uuid.Parse(uuidstring)
+
+		allBooks.AddBookToLibrary(b)
+	}
+
+	return allBooks, nil
+
+}
+
 func (d *Database) GetBookByID(bookID uuid.UUID) (Book, error) {
 	log.Println("GetBookByID | " + bookID.String())
 	selectBookByID := "SELECT * FROM Books WHERE ID = '" + bookID.String() + "';"

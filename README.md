@@ -58,8 +58,11 @@ Current version: v0.0.1
 
 ### Road to v0.2
 - [] Auction feature with higher price
-- [] Sort/Reorder book function in My Bookshelf/Auction
+- [x] Search Book function in Auction
 - [] Search Book function in My Bookshelf
+- [] Delete debug.log after several days or when it reaches a certain size
+- [] Update Help View
+- [] Add a way to display whether item has already been purchased or not in Bookshop
 
 ### Road to v0.3
 - [] Add item effects
@@ -69,7 +72,6 @@ Current version: v0.0.1
 ### Road to v1.0 
 - [] Find solution backwards compatibility with PlayerSave gob 
 - [] User Testing needed
-- [] Delete debug.log after several days or when it reaches a certain size
 
 ### Road to v2.0 
 - [] Find gameplay for prestige 

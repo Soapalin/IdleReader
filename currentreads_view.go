@@ -53,7 +53,7 @@ func (m *DashboardModel) CurrentReadsView() string {
 	n = 0
 
 	for n < book_locked {
-		s += theme.Heading2.Render("[Increase your inteligence to read multiple books simultaneously]")
+		s += theme.Heading2.Render("[Increase your IQ to read multiple books simultaneously]")
 		s += "\n*/100\n\n"
 		n++
 	}
