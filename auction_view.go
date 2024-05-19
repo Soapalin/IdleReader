@@ -27,36 +27,38 @@ func (m *DashboardModel) AuctionView() string {
 	)
 
 	if len(m.auctionLibrary.Books) > 0 {
-		bookNames := []string{theme.Heading2.Render("Book/Author"), "-"}
-		IQCost := []string{theme.Heading2.Render("IQ Req."), "-"}
-		KnowledgeCost := []string{theme.Heading2.Render("Knowledge Cost"), "-"}
-		Owned := []string{theme.Heading2.Render("Owned"), "-"}
 		start, end := m.auctionPaginator.GetSliceBounds(len(m.auctionLibrary.Books))
+
+		firstLine := []string{
+			theme.Heading2.Width(m.width / 2).Render("Book/Author"),
+			theme.Heading2.Width(m.width / 8).Render("IQ Req."),
+			theme.Heading2.Width(m.width / 4).Render("Knowledge Cost"),
+			theme.Heading2.Width(m.width / 8).Render("Owned"),
+		}
+		lines := []string{lipgloss.JoinHorizontal(lipgloss.Left, firstLine...)}
 
 		for i, b := range m.auctionLibrary.Books[start:end] {
 			var textStyle lipgloss.Style
+			var currentLine []string
 			if m.auc_cursor == (start + i) {
 				textStyle = lipgloss.NewStyle().Foreground(theme.Pink).Background(theme.White)
 			} else {
 				textStyle = lipgloss.NewStyle()
 			}
-			bookNames = append(bookNames, textStyle.Render(b.Name))
-			IQCost = append(IQCost, textStyle.Render(strconv.Itoa(b.IntelligenceRequirement)))
-			KnowledgeCost = append(KnowledgeCost, textStyle.Render(strconv.Itoa(b.KnowledgeRequirement)))
+			currentLine = append(currentLine, textStyle.Width(m.width/2).Render(b.Name+", "+b.Author))
+			currentLine = append(currentLine, textStyle.Width(m.width/8).Render(strconv.Itoa(b.IntelligenceRequirement)))
+			currentLine = append(currentLine, textStyle.Width(m.width/4).Render(strconv.Itoa(b.KnowledgeRequirement)))
 			if m.ps.Reader.Library.ContainsBook(b) {
-				Owned = append(Owned, textStyle.Render(RenderEmojiOrFallback("✅", []string{"Yes"})))
+				currentLine = append(currentLine, textStyle.Width(m.width/8).Render(RenderEmojiOrFallback("✅", []string{"Yes"})))
 			} else {
-				Owned = append(Owned, textStyle.Render(RenderEmojiOrFallback("❌", []string{"No"})))
+				currentLine = append(currentLine, textStyle.Width(m.width/8).Render(RenderEmojiOrFallback("❌", []string{"No"})))
 			}
+			lines = append(lines, lipgloss.JoinHorizontal(lipgloss.Left, currentLine...))
 
 		}
 
-		bookColumn := lipgloss.NewStyle().Width(m.width / 2).Render(lipgloss.JoinVertical(lipgloss.Left, bookNames...))
-		IQColumn := lipgloss.NewStyle().Width(m.width / 8).Render(lipgloss.JoinVertical(lipgloss.Left, IQCost...))
-		KnowledgeColumn := lipgloss.NewStyle().Width(m.width / 4).Render(lipgloss.JoinVertical(lipgloss.Left, KnowledgeCost...))
-		OwnedColumn := lipgloss.NewStyle().Width(m.width / 8).Render(lipgloss.JoinVertical(lipgloss.Left, Owned...))
 		s += "\n"
-		s += lipgloss.JoinHorizontal(lipgloss.Left, bookColumn, IQColumn, KnowledgeColumn, OwnedColumn)
+		s += lipgloss.JoinVertical(lipgloss.Left, lines...)
 
 		s += "\n"
 		paginatorView := lipgloss.NewStyle().Width(m.width).AlignHorizontal(lipgloss.Position(0.5)).Render(m.auctionPaginator.View())
@@ -75,10 +77,12 @@ func (m *DashboardModel) AuctionView() string {
 	s += "\n\n" + theme.HelpIcon.Render("ctrl+F") + theme.HelpText.Render(" search • ")
 	s += theme.HelpIcon.Render("ctrl+X") + theme.HelpText.Render(" clear search • ")
 	s += theme.HelpIcon.Render("enter") + theme.HelpText.Render(" submit search • ")
+	s += theme.HelpIcon.Render("b") + theme.HelpText.Render(" buy • ")
 	s += theme.HelpIcon.Render("←/→") + theme.HelpText.Render(" switch input • ")
 	s += theme.HelpIcon.Render("↑/↓") + theme.HelpText.Render(" switch book • ")
 	s += theme.HelpIcon.Render("esc / q") + theme.HelpText.Render(" quit")
 
+	s += "\n"
 	return s
 
 }
@@ -94,12 +98,13 @@ func (m *DashboardModel) AuctionSwitchInput() {
 }
 
 func (m *DashboardModel) NextAuctionBook() {
-	m.auc_cursor++
-	if m.auc_cursor >= len(m.auctionLibrary.Books) {
-		m.auc_cursor = 0
-		m.auctionPaginator.Page = 0
+	if m.auc_cursor >= len(m.auctionLibrary.Books)-1 {
+		// m.auc_cursor = 0
+		// m.auctionPaginator.Page = 0
 		return
 	}
+	m.auc_cursor++
+
 	_, end := m.auctionPaginator.GetSliceBounds(len(m.auctionLibrary.Books))
 	if m.auc_cursor >= end {
 		m.auctionPaginator.Page++
@@ -145,7 +150,17 @@ func (m *DashboardModel) SubmitAuctionSearch() {
 }
 
 func (m *DashboardModel) AuctionBuy() TransactionResult {
-	return knowledgeMissingTransaction
+	log.Println("AuctionBuy | ")
+	book := m.auctionLibrary.Books[m.auc_cursor]
+	if book.IntelligenceRequirement > m.ps.Reader.IQ {
+		return iqMissingTransaction
+	}
+	if book.KnowledgeRequirement > m.ps.Reader.Knowledge {
+		return knowledgeMissingTransaction
+	}
+	m.ps.Reader.DecreaseKnowledge(book.KnowledgeRequirement)
+	m.ps.Reader.Library.AddBookToLibrary(book)
+	return bookTransaction
 }
 
 func (m *DashboardModel) TryAuctionBuy() {
