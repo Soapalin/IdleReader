@@ -180,6 +180,11 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				switched := InitialSaveMenuModel()
 				return InitialRootModel().SwitchScreen(&switched)
 			}
+		case "b":
+			switch m.activeTab {
+			case 3:
+				m.TryAuctionBuy()
+			}
 		case tea.KeyCtrlX.String():
 			switch m.activeTab {
 			case 3:

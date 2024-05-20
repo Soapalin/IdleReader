@@ -57,12 +57,12 @@ Current version: v0.0.1
 - [x] Create a release page for pre-built .exe
 
 ### Road to v0.2
-- [] Auction feature with higher price
+- [x] Auction feature with higher price
 - [x] Search Book function in Auction
 - [] Search Book function in My Bookshelf
 - [] Delete debug.log after several days or when it reaches a certain size
-- [] Update Help View
-- [] Add a way to display whether item has already been purchased or not in Bookshop
+- [x] Update Help View
+- [x] Add a way to display whether item has already been purchased or not in Bookshop
 
 ### Road to v0.3
 - [] Add item effects

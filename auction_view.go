@@ -4,11 +4,14 @@ import (
 	"fmt"
 	"game/engine/theme"
 	"log"
+	"math/rand"
 	"strconv"
 	"strings"
 
 	"github.com/charmbracelet/lipgloss"
 )
+
+var AUCTION_COST_MODIFIER int = 2
 
 func (m *DashboardModel) AuctionView() string {
 	s := ""
@@ -47,7 +50,7 @@ func (m *DashboardModel) AuctionView() string {
 			}
 			currentLine = append(currentLine, textStyle.Width(m.width/2).Render(b.Name+", "+b.Author))
 			currentLine = append(currentLine, textStyle.Width(m.width/8).Render(strconv.Itoa(b.IntelligenceRequirement)))
-			currentLine = append(currentLine, textStyle.Width(m.width/4).Render(strconv.Itoa(b.KnowledgeRequirement)))
+			currentLine = append(currentLine, textStyle.Width(m.width/4).Render(strconv.Itoa(b.KnowledgeRequirement*AUCTION_COST_MODIFIER)))
 			if m.ps.Reader.Library.ContainsBook(b) {
 				currentLine = append(currentLine, textStyle.Width(m.width/8).Render(RenderEmojiOrFallback("✅", []string{"Yes"})))
 			} else {
@@ -146,6 +149,7 @@ func (m *DashboardModel) SubmitAuctionSearch() {
 	m.auctionLibrary = lib
 	m.auctionPaginator.SetTotalPages(len(m.auctionLibrary.Books))
 	m.auctionPaginator.Page = 0
+	AUCTION_COST_MODIFIER = rand.Intn(5) + 2
 
 }
 
@@ -155,10 +159,10 @@ func (m *DashboardModel) AuctionBuy() TransactionResult {
 	if book.IntelligenceRequirement > m.ps.Reader.IQ {
 		return iqMissingTransaction
 	}
-	if book.KnowledgeRequirement > m.ps.Reader.Knowledge {
+	if (book.KnowledgeRequirement * AUCTION_COST_MODIFIER) > m.ps.Reader.Knowledge {
 		return knowledgeMissingTransaction
 	}
-	m.ps.Reader.DecreaseKnowledge(book.KnowledgeRequirement)
+	m.ps.Reader.DecreaseKnowledge(book.KnowledgeRequirement * AUCTION_COST_MODIFIER)
 	m.ps.Reader.Library.AddBookToLibrary(book)
 	return bookTransaction
 }
