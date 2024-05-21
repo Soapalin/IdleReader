@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	fileutils "game/engine/utils"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -28,23 +29,15 @@ func main() {
 		} else {
 			TERMINAL = "consolehost"
 		}
-		// encoding check
-		// in, err := exec.Command("chcp", "65001").Output()
-		// if err != nil {
-		// 	panic(err)
-		// }
-		// log.Println("chcp | " + string(in))
-		// in, err = exec.Command("chcp").Output()
-		// if err != nil {
-		// 	panic(err)
-		// }
-		// log.Println("chcp | " + string(in))
 	}
 
 	if len(os.Getenv("DEBUG")) > 0 {
 		dir := createDocumentFolder()
 
 		debugFile := filepath.Join(dir, "debug.log")
+		if fileutils.IsFileExists(debugFile) {
+			fileutils.KeepFromEnd(debugFile, 1000000)
+		}
 		f, err := tea.LogToFile(debugFile, "[DEBUG]")
 		if err != nil {
 			fmt.Println("fatal:", err)

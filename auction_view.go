@@ -146,6 +146,7 @@ func (m *DashboardModel) SubmitAuctionSearch() {
 		m.errorMessage = err.Error()
 		return
 	}
+	log.Println(lib)
 	m.auctionLibrary = lib
 	m.auctionPaginator.SetTotalPages(len(m.auctionLibrary.Books))
 	m.auctionPaginator.Page = 0
