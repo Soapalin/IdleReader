@@ -169,7 +169,6 @@ func (s *Shop) LoadShopTable(lib_p *Library) {
 		return lipgloss.NewStyle().Width(20).Padding(1, 1)
 	}
 	s.table = *table.New().Headers(columns...).Rows(rows...).StyleFunc(styleFunc)
-	s.TableIndex = 1
 	s.TableLen = len(rows)
 }
 
