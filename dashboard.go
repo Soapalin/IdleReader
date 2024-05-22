@@ -317,7 +317,7 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tickMsg:
 		var cmd []tea.Cmd
 		cmd = append(cmd, tickCmd())
-		m.ps.Shop.Update(&m.ps.Reader.Library)
+		m.ps.Shop.Update(&m.ps.Reader)
 		w, h, _ := term.GetSize(int(os.Stdout.Fd()))
 		if w != m.width || h != m.height {
 			m.updateSize(w, h)

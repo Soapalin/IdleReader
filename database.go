@@ -403,8 +403,39 @@ func (d *Database) GetBookByID(bookID uuid.UUID) (Book, error) {
 
 }
 
+func (d *Database) GetBooksByFilter(filter string) (Library, error) {
+	log.Println("GetBooksByFilter")
+
+	selectAll := "SELECT * FROM Books WHERE " + filter + ";"
+
+	row, err := d.db.Query(selectAll)
+	if err != nil {
+		log.Println(err)
+		return Library{}, err
+	}
+	var allBooks Library
+	for row.Next() {
+		var b Book
+		var uuidstring string
+
+		er := row.Scan(&uuidstring, &b.Name, &b.Author, &b.Progress, &b.KnowledgeIncrease, &b.KnowledgeRequirement, &b.IntelligenceIncrease, &b.IntelligenceRequirement, &b.Pages, &b.Repeat)
+		if er != nil {
+			log.Println("FindBookByNameAuthor | row.Scan")
+			log.Println(er)
+			return Library{}, er
+		}
+		b.ID, _ = uuid.Parse(uuidstring)
+
+		allBooks.AddBookToLibrary(b)
+	}
+
+	return allBooks, nil
+
+}
+
 func (d *Database) GetAllBooks() (Library, error) {
 	log.Println("GetAllBooks")
+
 	selectAll := "SELECT * FROM Books;"
 
 	row, err := d.db.Query(selectAll)

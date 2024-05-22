@@ -60,12 +60,13 @@ Current version: v0.0.1
 - [x] Auction feature with higher price
 - [x] Search Book function in Auction
 - [] Search Book function in My Bookshelf
-- [] Delete debug.log after several days or when it reaches a certain size
+- [x] Shop shows books depending on your IQ
 - [x] Update Help View
 - [x] Add a way to display whether item has already been purchased or not in Bookshop
 
 ### Road to v0.3
 - [] Add item effects
+- [] Add price algorithm
 - [] Fetch and add real books (use external API or web scraper)
 - [] Algorithm with reading speed
 

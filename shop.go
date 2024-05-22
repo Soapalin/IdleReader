@@ -132,10 +132,10 @@ func (s *Shop) PreviousRow() {
 	}
 }
 
-func (s *Shop) Update(lib_p *Library) {
+func (s *Shop) Update(reader_p *Reader) {
 	if s.Modified.Add(time.Minute * 1).Before(time.Now()) {
 		log.Println("Shop | Update()")
-		*s = InitShop(lib_p)
+		*s = InitShop(reader_p)
 		s.Modified = time.Now()
 	}
 }
@@ -173,7 +173,7 @@ func (s *Shop) LoadShopTable(lib_p *Library) {
 	s.TableLen = len(rows)
 }
 
-func InitShop(lib_p *Library) Shop {
+func InitShop(reader_p *Reader) Shop {
 	n := 0
 	var books Library
 	var items GameItemDatabase
@@ -181,7 +181,7 @@ func InitShop(lib_p *Library) Shop {
 
 	columns := []string{"Name", "Description", "IQ Required", "Knowledge Cost"}
 	var rows [][]string
-	allBooks, err := DB.GetAllBooks()
+	allBooks, err := DB.GetBooksByFilter("IntelligenceRequirement <= " + strconv.Itoa(reader_p.IQ))
 
 	if err != nil {
 		log.Println(err)
@@ -198,7 +198,7 @@ func InitShop(lib_p *Library) Shop {
 			books.AddBookToLibrary(allBooks.Books[randomIndex])
 			b := allBooks.Books[randomIndex]
 			var owned_string string
-			owned := lib_p.ContainsBook(b)
+			owned := reader_p.Library.ContainsBook(b)
 			if owned {
 				owned_string = "*"
 			}
