@@ -81,6 +81,7 @@ func (m *DashboardModel) AuctionView() string {
 	s += theme.HelpIcon.Render("ctrl+X") + theme.HelpText.Render(" clear search • ")
 	s += theme.HelpIcon.Render("enter") + theme.HelpText.Render(" submit search • ")
 	s += theme.HelpIcon.Render("b") + theme.HelpText.Render(" buy • ")
+	s += theme.HelpIcon.Render("i") + theme.HelpText.Render(" book info • ")
 	s += theme.HelpIcon.Render("←/→") + theme.HelpText.Render(" switch input • ")
 	s += theme.HelpIcon.Render("↑/↓") + theme.HelpText.Render(" switch book • ")
 	s += theme.HelpIcon.Render("esc / q") + theme.HelpText.Render(" quit")

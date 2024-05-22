@@ -40,8 +40,9 @@ func (m *DashboardModel) BookshelfView() string {
 	paginatorFull := lipgloss.JoinVertical(0, paginatorView, pageNumber)
 	s += lipgloss.NewStyle().Width(m.width).AlignHorizontal(lipgloss.Position(0.5)).Render(paginatorFull)
 
-	s += "\n" + theme.HelpIcon.Render("r") + theme.HelpText.Render(" read book • ")
-	s += theme.HelpIcon.Render("enter") + theme.HelpText.Render(" book details • ")
+	s += "\n" + theme.HelpIcon.Render("enter") + theme.HelpText.Render(" read book • ")
+	s += theme.HelpIcon.Render("i") + theme.HelpText.Render(" book info • ")
+	s += theme.HelpIcon.Render("tab/shift+tab") + theme.HelpText.Render(" switch tabs • ")
 	s += theme.HelpIcon.Render("esc") + theme.HelpText.Render(" back • ")
 	s += theme.HelpIcon.Render("q") + theme.HelpText.Render(" quit")
 	return s

@@ -58,5 +58,8 @@ func (m *DashboardModel) CurrentReadsView() string {
 		n++
 	}
 
+	s += "\n"
+	s += theme.HelpIcon.Render("tab/shift+tab") + theme.HelpText.Render(" switch tabs • ")
+	s += theme.HelpIcon.Render("esc / q") + theme.HelpText.Render(" quit")
 	return s
 }

@@ -45,6 +45,8 @@ func (m *DashboardModel) BookshopView() string {
 	s += "\n* - owned"
 
 	s += "\n\n" + theme.HelpIcon.Render("enter") + theme.HelpText.Render(" buy • ")
+	s += theme.HelpIcon.Render("tab/shift+tab") + theme.HelpText.Render(" switch tabs • ")
+	s += theme.HelpIcon.Render("i") + theme.HelpText.Render(" book/item info • ")
 	s += theme.HelpIcon.Render("esc / q") + theme.HelpText.Render(" quit")
 
 	return s

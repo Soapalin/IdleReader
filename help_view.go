@@ -43,6 +43,7 @@ func (m *DashboardModel) HelpView() string {
 	s += lipgloss.NewStyle().Width(m.width).AlignHorizontal(lipgloss.Position(0.5)).Render(paginatorFull)
 	s += "\n" + theme.HelpIcon.Render("←") + theme.HelpText.Render(" previous • ")
 	s += theme.HelpIcon.Render("→") + theme.HelpText.Render(" next • ")
+	s += theme.HelpIcon.Render("tab/shift+tab") + theme.HelpText.Render(" switch tabs • ")
 	s += theme.HelpIcon.Render("esc / q") + theme.HelpText.Render(" quit")
 	return s
 }

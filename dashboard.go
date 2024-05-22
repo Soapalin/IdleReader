@@ -185,6 +185,29 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			case 3:
 				m.TryAuctionBuy()
 			}
+		case "i":
+			switch m.activeTab {
+			case 0:
+				if !m.bookChange {
+					switched := InitialBookDetailsModel(m.ps.Reader.Library.Books[m.bs_cursor], m)
+					return InitialRootModel().SwitchScreen(&switched)
+				}
+			case 2:
+				if m.ps.Shop.TableIndex > len(m.ps.Shop.Books.Books) {
+					switched := InitialBookDetailsModel(m.ps.Shop.Items.Items[m.ps.Shop.TableIndex-len(m.ps.Shop.Books.Books)-1], m)
+					return InitialRootModel().SwitchScreen(&switched)
+				} else {
+					switched := InitialBookDetailsModel(m.ps.Shop.Books.Books[m.ps.Shop.TableIndex-1], m)
+					return InitialRootModel().SwitchScreen(&switched)
+				}
+			case 3:
+				if len(m.auctionLibrary.Books) > 0 {
+					switched := InitialBookDetailsModel(m.auctionLibrary.Books[m.auc_cursor], m)
+					return InitialRootModel().SwitchScreen(&switched)
+				}
+
+			}
+		case "a":
 		case tea.KeyCtrlX.String():
 			switch m.activeTab {
 			case 3:
@@ -232,10 +255,7 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			case 2:
 				m.TryBuy()
 			case 0:
-				if !m.bookChange {
-					switched := InitialBookDetailsModel(m.ps.Reader.Library.Books[m.bs_cursor], m)
-					return InitialRootModel().SwitchScreen(&switched)
-				}
+				m.TrySwitchBook()
 			case 3:
 				m.SubmitAuctionSearch()
 			case 4:
@@ -284,11 +304,6 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			case 3:
 				m.auction_inputs[0].Focus()
 				m.auction_inputs[1].Blur()
-			}
-		case "r", "R":
-			switch m.activeTab {
-			case 0:
-				m.TrySwitchBook()
 			}
 		case "1", "2", "3":
 			switch m.activeTab {
