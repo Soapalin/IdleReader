@@ -148,7 +148,7 @@ func NewPlayerSave(name string, book string, author string) PlayerSave {
 	return PlayerSave{
 		Reader:   newReader,
 		Filename: dir,
-		Shop:     InitShop(),
+		Shop:     InitShop(&newReader),
 	}
 }
 

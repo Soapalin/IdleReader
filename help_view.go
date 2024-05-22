@@ -24,6 +24,9 @@ func (h *HelpItem) View(maxWidth int) string {
 
 var HelpSection []HelpItem = []HelpItem{
 	{"How do I play this game?", "Purchase, Read, Gain Knowlege and IQ, and finally collect your favourite books!"},
+	{"How do I purchcase books?", "Purchase your books in the Bookshop or Auction. Bookshop books are refreshed and totally randomised while you can look for your favourtie book in the Auction window. Beware, prices are higher!"},
+	{"How do I increase my IQ?", "IQ only increases by a small amount on your first read! You will need to purchase and read different books in order to increase it."},
+	{"How do I read the book I have purchased?", "Head to the your Bookshelf and press 'r' on the book you would like to read."},
 	{"Where can I find an in-depth game guide?", "Head to our official wiki," + lipgloss.NewStyle().Foreground(theme.Pink).Render("{https://placeholder.com}")},
 }
 
@@ -40,6 +43,7 @@ func (m *DashboardModel) HelpView() string {
 	s += lipgloss.NewStyle().Width(m.width).AlignHorizontal(lipgloss.Position(0.5)).Render(paginatorFull)
 	s += "\n" + theme.HelpIcon.Render("←") + theme.HelpText.Render(" previous • ")
 	s += theme.HelpIcon.Render("→") + theme.HelpText.Render(" next • ")
+	s += theme.HelpIcon.Render("tab/shift+tab") + theme.HelpText.Render(" switch tabs • ")
 	s += theme.HelpIcon.Render("esc / q") + theme.HelpText.Render(" quit")
 	return s
 }

@@ -10,6 +10,7 @@ import (
 	"github.com/charmbracelet/bubbles/paginator"
 	"github.com/charmbracelet/bubbles/progress"
 	"github.com/charmbracelet/bubbles/spinner"
+	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"golang.org/x/term"
@@ -18,22 +19,26 @@ import (
 )
 
 type DashboardModel struct {
-	tabs          []string
-	activeTab     int
-	ps            PlayerSave
-	progress      []progress.Model
-	errorMessage  string
-	cr_cursor     int
-	bs_cursor     int
-	i_cursor      int
-	bookChange    bool
-	width         int
-	height        int
-	spinner       spinner.Model
-	helpPaginator paginator.Model
-	bookPaginator paginator.Model
-	exitChoices   []string
-	ex_cursor     int
+	tabs             []string
+	activeTab        int
+	ps               PlayerSave
+	progress         []progress.Model
+	errorMessage     string
+	cr_cursor        int
+	bs_cursor        int
+	i_cursor         int
+	auc_cursor       int
+	bookChange       bool
+	width            int
+	height           int
+	spinner          spinner.Model
+	helpPaginator    paginator.Model
+	bookPaginator    paginator.Model
+	auctionPaginator paginator.Model
+	exitChoices      []string
+	ex_cursor        int
+	auction_inputs   []textinput.Model
+	auctionLibrary   Library
 }
 
 func TabBorder(left, middle, right string) lipgloss.Border {
@@ -82,28 +87,46 @@ func InitialDashboardModel(ps *PlayerSave, activeTab int, bs_cursor int, i_curso
 
 	exitChoices := []string{"Save & Go to Main Menu", "Save & Quit", "Quit without Saving"}
 
-	return DashboardModel{
-		tabs:          tabs,
-		activeTab:     activeTab,
-		ps:            *ps,
-		progress:      prog,
-		errorMessage:  "",
-		cr_cursor:     0,
-		bs_cursor:     bs_cursor,
-		i_cursor:      i_cursor,
-		bookChange:    false,
-		width:         w,
-		height:        h,
-		spinner:       s,
-		helpPaginator: hp,
-		bookPaginator: bp,
-		exitChoices:   exitChoices,
-		ex_cursor:     0,
-	}
-}
+	var inputs []textinput.Model = make([]textinput.Model, 2)
 
-func (m *DashboardModel) AuctionView() string {
-	return "Auction coming soon..."
+	inputs[0] = textinput.New()
+	inputs[0].CharLimit = 255
+	inputs[0].Width = 40
+	inputs[0].Prompt = ""
+
+	inputs[1] = textinput.New()
+	inputs[1].CharLimit = 255
+	inputs[1].Width = 40
+	inputs[1].Prompt = ""
+
+	ap := paginator.New()
+	ap.Type = paginator.Dots
+	ap.PerPage = 5
+	ap.ActiveDot = theme.ActiveDotPaginator
+	ap.InactiveDot = theme.InactiveDotPaginator
+	ap.SetTotalPages(1)
+
+	return DashboardModel{
+		tabs:             tabs,
+		activeTab:        activeTab,
+		ps:               *ps,
+		progress:         prog,
+		errorMessage:     "",
+		cr_cursor:        0,
+		bs_cursor:        bs_cursor,
+		i_cursor:         i_cursor,
+		bookChange:       false,
+		width:            w,
+		height:           h,
+		spinner:          s,
+		helpPaginator:    hp,
+		bookPaginator:    bp,
+		exitChoices:      exitChoices,
+		ex_cursor:        0,
+		auction_inputs:   inputs,
+		auctionPaginator: ap,
+		auctionLibrary:   Library{},
+	}
 }
 
 type tickMsg time.Time
@@ -150,15 +173,52 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "q", tea.KeyEsc.String():
 			if m.bookChange {
 				m.bookChange = false
+			} else if m.auction_inputs[0].Focused() || m.auction_inputs[1].Focused() {
+				// do nothing
 			} else {
 				m.ps.SavePlayerToFile()
 				switched := InitialSaveMenuModel()
 				return InitialRootModel().SwitchScreen(&switched)
 			}
+		case "b":
+			switch m.activeTab {
+			case 3:
+				m.TryAuctionBuy()
+			}
+		case "i":
+			switch m.activeTab {
+			case 0:
+				if !m.bookChange {
+					switched := InitialBookDetailsModel(m.ps.Reader.Library.Books[m.bs_cursor], m)
+					return InitialRootModel().SwitchScreen(&switched)
+				}
+			case 2:
+				if m.ps.Shop.TableIndex > len(m.ps.Shop.Books.Books) {
+					switched := InitialBookDetailsModel(m.ps.Shop.Items.Items[m.ps.Shop.TableIndex-len(m.ps.Shop.Books.Books)-1], m)
+					return InitialRootModel().SwitchScreen(&switched)
+				} else {
+					switched := InitialBookDetailsModel(m.ps.Shop.Books.Books[m.ps.Shop.TableIndex-1], m)
+					return InitialRootModel().SwitchScreen(&switched)
+				}
+			case 3:
+				if len(m.auctionLibrary.Books) > 0 {
+					switched := InitialBookDetailsModel(m.auctionLibrary.Books[m.auc_cursor], m)
+					return InitialRootModel().SwitchScreen(&switched)
+				}
+
+			}
+		case "a":
+		case tea.KeyCtrlX.String():
+			switch m.activeTab {
+			case 3:
+				m.ClearAuctionSearch()
+			}
 		case tea.KeyTab.String():
 			m.NextTab()
+			m.UnfocusAuctionInputs()
 		case tea.KeyShiftTab.String():
 			m.PreviousTab()
+			m.UnfocusAuctionInputs()
 		case tea.KeyUp.String():
 			switch m.activeTab {
 			case 0:
@@ -167,6 +227,8 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.PreviousCurrentReads()
 			case 2:
 				m.ps.Shop.PreviousRow()
+			case 3:
+				m.PreviousAuctionBook()
 			case 4:
 				m.PreviousItemInventory()
 			case 6:
@@ -181,6 +243,8 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.NextCurrentReads()
 			case 2:
 				m.ps.Shop.NextRow()
+			case 3:
+				m.NextAuctionBook()
 			case 4:
 				m.NextItemInventory()
 			case 6:
@@ -191,13 +255,14 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			case 2:
 				m.TryBuy()
 			case 0:
-				if !m.bookChange {
-					switched := InitialBookDetailsModel(m.ps.Reader.Library.Books[m.bs_cursor], m)
+				m.TrySwitchBook()
+			case 3:
+				m.SubmitAuctionSearch()
+			case 4:
+				if len(m.ps.Reader.Inventory.Items) > 0 {
+					switched := InitialBookDetailsModel(m.ps.Reader.Inventory.Items[m.i_cursor], m)
 					return InitialRootModel().SwitchScreen(&switched)
 				}
-			case 4:
-				switched := InitialBookDetailsModel(m.ps.Reader.Inventory.Items[m.i_cursor], m)
-				return InitialRootModel().SwitchScreen(&switched)
 			case 6:
 				switch m.exitChoices[m.ex_cursor] {
 				case "Save & Go to Main Menu":
@@ -220,6 +285,8 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			switch m.activeTab {
 			case 0:
 				m.PreviousBookPage()
+			case 3:
+				m.AuctionSwitchInput()
 			case 5:
 				m.PreviousHelpItem()
 			}
@@ -227,13 +294,16 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			switch m.activeTab {
 			case 0:
 				m.NextBookPage()
+			case 3:
+				m.AuctionSwitchInput()
 			case 5:
 				m.NextHelpItem()
 			}
-		case "r", "R":
+		case tea.KeyCtrlF.String():
 			switch m.activeTab {
-			case 0:
-				m.TrySwitchBook()
+			case 3:
+				m.auction_inputs[0].Focus()
+				m.auction_inputs[1].Blur()
 			}
 		case "1", "2", "3":
 			switch m.activeTab {
@@ -262,7 +332,7 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tickMsg:
 		var cmd []tea.Cmd
 		cmd = append(cmd, tickCmd())
-		m.ps.Shop.Update()
+		m.ps.Shop.Update(&m.ps.Reader)
 		w, h, _ := term.GetSize(int(os.Stdout.Fd()))
 		if w != m.width || h != m.height {
 			m.updateSize(w, h)
@@ -303,7 +373,11 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.spinner, spinner_cmd = m.spinner.Update(msg)
 		return m, spinner_cmd
 	}
-	return m, nil
+	var keycmds []tea.Cmd = make([]tea.Cmd, len(m.auction_inputs))
+	for i := range m.auction_inputs {
+		m.auction_inputs[i], keycmds[i] = m.auction_inputs[i].Update(msg)
+	}
+	return m, tea.Batch(keycmds...)
 
 }
 

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	fileutils "game/engine/utils"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -28,23 +29,15 @@ func main() {
 		} else {
 			TERMINAL = "consolehost"
 		}
-		// encoding check
-		// in, err := exec.Command("chcp", "65001").Output()
-		// if err != nil {
-		// 	panic(err)
-		// }
-		// log.Println("chcp | " + string(in))
-		// in, err = exec.Command("chcp").Output()
-		// if err != nil {
-		// 	panic(err)
-		// }
-		// log.Println("chcp | " + string(in))
 	}
 
 	if len(os.Getenv("DEBUG")) > 0 {
 		dir := createDocumentFolder()
 
 		debugFile := filepath.Join(dir, "debug.log")
+		if fileutils.IsFileExists(debugFile) {
+			fileutils.KeepFromEnd(debugFile, 1000000)
+		}
 		f, err := tea.LogToFile(debugFile, "[DEBUG]")
 		if err != nil {
 			fmt.Println("fatal:", err)
@@ -63,21 +56,25 @@ func main() {
 
 }
 
+func PlatformPath(path string) string {
+	if SYSTEM == "windows" {
+		return filepath.Join(path, "Documents", "IdleReader")
+	} else if SYSTEM == "linux" {
+		return filepath.Join(path, ".IdleReader")
+	} else if SYSTEM == "darwin" {
+		// macOS
+		return filepath.Join(path, "Library", "Application Support", "IdleReader")
+	} else {
+		return filepath.Join(path, "Documents", "IdleReader")
+	}
+}
+
 func createDocumentFolder() string {
 	dir, err := os.UserHomeDir()
 	if err != nil {
 		panic(err)
 	}
-	if SYSTEM == "windows" {
-		dir = filepath.Join(dir, "Documents", "IdleReader")
-	} else if SYSTEM == "linux" {
-		dir = filepath.Join(dir, ".IdleReader")
-	} else if SYSTEM == "darwin" {
-		// macOS
-		dir = filepath.Join(dir, "Library", "Application Support", "IdleReader")
-	} else {
-		dir = filepath.Join(dir, "Documents", "IdleReader")
-	}
+	dir = PlatformPath(dir)
 
 	err = os.MkdirAll(dir, os.ModePerm)
 	if err != nil {

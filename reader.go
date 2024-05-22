@@ -102,10 +102,12 @@ func (r *Reader) IQ_Title() string {
 	} else if r.IQ < 130 {
 		return "Very High"
 	} else if r.IQ < 150 {
-		return "Smarty Pants"
+		return "Extremely High"
 	} else if r.IQ < 200 {
-		return "Big Brain"
+		return "Smarty Pants"
 	} else if r.IQ < 400 {
+		return "Big Brain"
+	} else if r.IQ < 600 {
 		return "Planetary Brain"
 	} else {
 		return "Galaxy Brain"

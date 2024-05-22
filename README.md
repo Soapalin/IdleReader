@@ -57,19 +57,22 @@ Current version: v0.0.1
 - [x] Create a release page for pre-built .exe
 
 ### Road to v0.2
-- [] Auction feature with higher price
-- [] Sort/Reorder book function in My Bookshelf/Auction
-- [] Search Book function in My Bookshelf
+- [x] Auction feature with higher price
+- [x] Search Book function in Auction
+- [x] Shop shows books depending on your IQ
+- [x] Update Help View
+- [x] Add a way to display whether item has already been purchased or not in Bookshop
 
 ### Road to v0.3
 - [] Add item effects
+- [] Search Book function in My Bookshelf
+- [] Add price algorithm
 - [] Fetch and add real books (use external API or web scraper)
 - [] Algorithm with reading speed
 
 ### Road to v1.0 
 - [] Find solution backwards compatibility with PlayerSave gob 
 - [] User Testing needed
-- [] Delete debug.log after several days or when it reaches a certain size
 
 ### Road to v2.0 
 - [] Find gameplay for prestige 

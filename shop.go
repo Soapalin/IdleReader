@@ -86,6 +86,7 @@ func (s *Shop) Buy(ps *PlayerSave) TransactionResult {
 		}
 		ps.Reader.DecreaseKnowledge(s.Books.Books[index].KnowledgeRequirement)
 		ps.Reader.Library.AddBookToLibrary(s.Books.Books[index])
+		s.LoadShopTable(&ps.Reader.Library)
 		return bookTransaction
 	} else if (index - len(s.Books.Books)) < len(s.Items.Items) {
 		log.Println(s.Items.Items[index-len(s.Books.Books)].Name)
@@ -117,10 +118,11 @@ func (s *Shop) GetShopItemByIndex() uuid.UUID {
 }
 
 func (s *Shop) NextRow() {
-	s.TableIndex++
-	if s.TableIndex > s.TableLen {
-		s.TableIndex = 1
+	if s.TableIndex >= s.TableLen {
+		return
 	}
+	s.TableIndex++
+
 }
 
 func (s *Shop) PreviousRow() {
@@ -130,20 +132,25 @@ func (s *Shop) PreviousRow() {
 	}
 }
 
-func (s *Shop) Update() {
+func (s *Shop) Update(reader_p *Reader) {
 	if s.Modified.Add(time.Minute * 1).Before(time.Now()) {
 		log.Println("Shop | Update()")
-		*s = InitShop()
+		*s = InitShop(reader_p)
 		s.Modified = time.Now()
 	}
 }
 
-func (s *Shop) LoadShopTable() {
-	columns := []string{"Name", "Description", "IQ Required", "Cost"}
+func (s *Shop) LoadShopTable(lib_p *Library) {
+	columns := []string{"Name", "Description", "IQ Required", "Knowledge Cost"}
 	var rows [][]string
 	n := 0
 	for n < len(s.Books.Books) {
-		rows = append(rows, []string{s.Books.Books[n].Name, s.Books.Books[n].Author, strconv.Itoa(s.Books.Books[n].IntelligenceRequirement), strconv.Itoa(s.Books.Books[n].KnowledgeRequirement)})
+		var owned_string string
+		owned := lib_p.ContainsBook(s.Books.Books[n])
+		if owned {
+			owned_string = "*"
+		}
+		rows = append(rows, []string{owned_string + s.Books.Books[n].Name, s.Books.Books[n].Author, strconv.Itoa(s.Books.Books[n].IntelligenceRequirement), strconv.Itoa(s.Books.Books[n].KnowledgeRequirement)})
 		n += 1
 	}
 	n = 0
@@ -162,19 +169,18 @@ func (s *Shop) LoadShopTable() {
 		return lipgloss.NewStyle().Width(20).Padding(1, 1)
 	}
 	s.table = *table.New().Headers(columns...).Rows(rows...).StyleFunc(styleFunc)
-	s.TableIndex = 1
 	s.TableLen = len(rows)
 }
 
-func InitShop() Shop {
+func InitShop(reader_p *Reader) Shop {
 	n := 0
 	var books Library
 	var items GameItemDatabase
 	pf := message.NewPrinter(language.English)
 
-	columns := []string{"Name", "Description", "IQ Required", "Cost"}
+	columns := []string{"Name", "Description", "IQ Required", "Knowledge Cost"}
 	var rows [][]string
-	allBooks, err := DB.GetAllBooks()
+	allBooks, err := DB.GetBooksByFilter("IntelligenceRequirement <= " + strconv.Itoa(reader_p.IQ))
 
 	if err != nil {
 		log.Println(err)
@@ -190,7 +196,12 @@ func InitShop() Shop {
 		if !books.ContainsBook(allBooks.Books[randomIndex]) {
 			books.AddBookToLibrary(allBooks.Books[randomIndex])
 			b := allBooks.Books[randomIndex]
-			rows = append(rows, []string{b.Name, b.Author, pf.Sprintf("%d", b.IntelligenceRequirement), pf.Sprintf("%d", b.KnowledgeRequirement)})
+			var owned_string string
+			owned := reader_p.Library.ContainsBook(b)
+			if owned {
+				owned_string = "*"
+			}
+			rows = append(rows, []string{owned_string + b.Name, b.Author, pf.Sprintf("%d", b.IntelligenceRequirement), pf.Sprintf("%d", b.KnowledgeRequirement)})
 			n += 1
 		}
 	}
