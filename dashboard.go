@@ -158,7 +158,7 @@ func (m DashboardModel) Init() tea.Cmd {
 	return tea.Batch(cmd...)
 }
 func (m *DashboardModel) ResetBookChangeState(msg string) {
-	if m.bookChange && (msg != "r" && msg != "R") {
+	if m.bookChange && (msg != tea.KeyEnter.String()) {
 		m.bookChange = false
 	}
 }
