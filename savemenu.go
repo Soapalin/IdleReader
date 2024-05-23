@@ -82,9 +82,10 @@ type SaveMenuModel struct {
 }
 
 type PlayerSave struct {
-	Reader   Reader
-	Filename string
-	Shop     Shop
+	Reader    Reader
+	Filename  string
+	Shop      Shop
+	lastSaved time.Time
 }
 
 func (ps *PlayerSave) AlreadyOwned(id uuid.UUID) bool {
@@ -235,28 +236,14 @@ func (r *PlayerSave) SavePlayerToFile() {
 		panic(err)
 	}
 
-	// g, err := os.Create(r.Filename)
-	// if err != nil {
-	// 	log.Println("SavePlayerToFile | os.Create")
-	// 	log.Println(r.Filename)
-	// 	panic(err)
-	// }
-	// defer g.Close()
+}
 
-	// b, err := json.Marshal(*r)
-	// log.Println("SavePlayerString")
-	// log.Println(string(b))
-	// // var playersave PlayerSave
-	// // err = json.Unmarshal(b, &playersave)
-	// // log.Println(playersave)
-
-	// if err != nil {
-	// 	panic(err)
-	// }
-
-	// if _, err := g.Write(b); err != nil {
-	// 	panic(err)
-	// }
+func (r *PlayerSave) PeriodicSavePlayerToFile() {
+	if r.lastSaved.Add(time.Minute * 1).Before(time.Now()) {
+		log.Println("PeriodicSavePlayerToFile |")
+		r.SavePlayerToFile()
+		r.lastSaved = time.Now()
+	}
 }
 
 func InitialSaveMenuModel() SaveMenuModel {

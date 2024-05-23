@@ -333,6 +333,7 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		var cmd []tea.Cmd
 		cmd = append(cmd, tickCmd())
 		m.ps.Shop.Update(&m.ps.Reader)
+		m.ps.PeriodicSavePlayerToFile()
 		w, h, _ := term.GetSize(int(os.Stdout.Fd()))
 		if w != m.width || h != m.height {
 			m.updateSize(w, h)
