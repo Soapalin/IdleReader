@@ -26,7 +26,7 @@ func (m *DashboardModel) CurrentReadsView() string {
 		if err != nil {
 			panic(err)
 		}
-		s += theme.Heading2.Render(cr_data.Name + ", " + cr_data.Author)
+		s += theme.Heading2.Width(m.width - 4).Render(cr_data.Name + ", " + cr_data.Author)
 		if i == m.cr_cursor {
 			s += " ←"
 		}
@@ -45,7 +45,7 @@ func (m *DashboardModel) CurrentReadsView() string {
 	book_unlocked := MAX_SIMULT_BOOK - book_locked - len(r.CurrentReads.BookIDs)
 	n := 0
 	for n < book_unlocked {
-		s += theme.Heading2.Render("[Select a book to read in your Bookshelf]")
+		s += theme.Heading2.Width(m.width - 4).Render("[Select a book to read in your Bookshelf]")
 		s += "\n"
 		s += "*/100\n\n"
 		n++
@@ -53,7 +53,7 @@ func (m *DashboardModel) CurrentReadsView() string {
 	n = 0
 
 	for n < book_locked {
-		s += theme.Heading2.Render("[Increase your IQ to read multiple books simultaneously]")
+		s += theme.Heading2.Width(m.width - 4).Render("[Increase your IQ to read multiple books simultaneously]")
 		s += "\n*/100\n\n"
 		n++
 	}
