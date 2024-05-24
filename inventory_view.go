@@ -13,6 +13,10 @@ func (m *DashboardModel) InventoryView() string {
 		s += "\n"
 	}
 
+	if len(m.ps.Reader.Inventory.Items) == 0 {
+		s += "Empty Inventory. Purchase items at the Bookshop.\n"
+	}
+
 	return s
 }
 
