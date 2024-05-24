@@ -12,8 +12,6 @@ To play the game, head to the  <a href="#-installation">installation</a> section
 1. <a href="#-wiki">Wiki </a>
 1. <a href="#-roadmap">Roadmap </a>
 1. <a href="#-license">License </a>
-1. <a href="#-contribution">Contribution </a>
-
 
 ## 📕 Description 
 
