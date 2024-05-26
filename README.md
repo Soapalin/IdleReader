@@ -3,6 +3,16 @@ Welcome to Idle Reader! Immerse yourself in this idle text-based game! Accumulat
 <br>
 To play the game, head to the  <a href="#-installation">installation</a> section down below or to the <a href="https://github.com/Soapalin/IdleReader/releases">release</a> page.
 
+## 📕 Table of Contents
+
+
+1. <a href="#-description">Description </a>
+1. <a href="#-features">Features </a>
+1. <a href="#-installation">Installation </a>
+1. <a href="#-wiki">Wiki </a>
+1. <a href="#-roadmap">Roadmap </a>
+1. <a href="#-license">License </a>
+
 ## 📕 Description 
 
 Start your journey with only your favourite book in-hand! By reading it, grow your Intelligence and Knowledge. Knowledge is the currency used in-game: use it wisely to purchase and collect your favourite books! Beware, some books have Intelligence requirements, and the only way to grow your IQ is to read different books (at least once). 
