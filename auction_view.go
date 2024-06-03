@@ -101,6 +101,15 @@ func (m *DashboardModel) AuctionSwitchInput() {
 	}
 }
 
+func (m *DashboardModel) AuctionInputsFocused() bool {
+	for _, input := range m.auction_inputs {
+		if input.Focused() {
+			return true
+		}
+	}
+	return false
+}
+
 func (m *DashboardModel) NextAuctionBook() {
 	if m.auc_cursor >= len(m.auctionLibrary.Books)-1 {
 		// m.auc_cursor = 0
