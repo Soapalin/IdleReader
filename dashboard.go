@@ -38,7 +38,9 @@ type DashboardModel struct {
 	exitChoices      []string
 	ex_cursor        int
 	auction_inputs   []textinput.Model
+	bookshelf_input  textinput.Model
 	auctionLibrary   Library
+	bookshelfLibrary Library
 }
 
 func TabBorder(left, middle, right string) lipgloss.Border {
@@ -99,6 +101,11 @@ func InitialDashboardModel(ps *PlayerSave, activeTab int, bs_cursor int, i_curso
 	inputs[1].Width = 40
 	inputs[1].Prompt = ""
 
+	bsInput := textinput.New()
+	bsInput.CharLimit = 255
+	bsInput.Width = 40
+	bsInput.Prompt = ""
+
 	ap := paginator.New()
 	ap.Type = paginator.Dots
 	ap.PerPage = 5
@@ -125,7 +132,9 @@ func InitialDashboardModel(ps *PlayerSave, activeTab int, bs_cursor int, i_curso
 		ex_cursor:        0,
 		auction_inputs:   inputs,
 		auctionPaginator: ap,
+		bookshelf_input:  bsInput,
 		auctionLibrary:   Library{},
+		bookshelfLibrary: ps.Reader.Library,
 	}
 }
 
@@ -173,6 +182,8 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "q", tea.KeyEsc.String():
 			if m.bookChange {
 				m.bookChange = false
+			} else if m.bookshelf_input.Focused() {
+				m.bookshelf_input.Blur()
 			} else if m.auction_inputs[0].Focused() || m.auction_inputs[1].Focused() {
 				// do nothing
 			} else {
@@ -188,10 +199,13 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "i":
 			switch m.activeTab {
 			case 0:
-				if !m.bookChange {
-					switched := InitialBookDetailsModel(m.ps.Reader.Library.Books[m.bs_cursor], m)
-					return InitialRootModel().SwitchScreen(&switched)
+				if !m.bookshelf_input.Focused() {
+					if !m.bookChange {
+						switched := InitialBookDetailsModel(m.ps.Reader.Library.Books[m.bs_cursor], m)
+						return InitialRootModel().SwitchScreen(&switched)
+					}
 				}
+
 			case 2:
 				if m.ps.Shop.TableIndex > len(m.ps.Shop.Books.Books) {
 					switched := InitialBookDetailsModel(m.ps.Shop.Items.Items[m.ps.Shop.TableIndex-len(m.ps.Shop.Books.Books)-1], m)
@@ -201,24 +215,32 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					return InitialRootModel().SwitchScreen(&switched)
 				}
 			case 3:
-				if len(m.auctionLibrary.Books) > 0 {
-					switched := InitialBookDetailsModel(m.auctionLibrary.Books[m.auc_cursor], m)
-					return InitialRootModel().SwitchScreen(&switched)
+				if !m.AuctionInputsFocused() {
+					if len(m.auctionLibrary.Books) > 0 {
+						switched := InitialBookDetailsModel(m.auctionLibrary.Books[m.auc_cursor], m)
+						return InitialRootModel().SwitchScreen(&switched)
+					}
 				}
 
 			}
 		case "a":
 		case tea.KeyCtrlX.String():
 			switch m.activeTab {
+			case 0:
+				m.ClearBookshelfInput()
 			case 3:
 				m.ClearAuctionSearch()
 			}
 		case tea.KeyTab.String():
 			m.NextTab()
 			m.UnfocusAuctionInputs()
+			m.UnfocusBookshelfInput()
+			m.bookshelfLibrary = m.ps.Reader.Library
 		case tea.KeyShiftTab.String():
 			m.PreviousTab()
 			m.UnfocusAuctionInputs()
+			m.UnfocusBookshelfInput()
+			m.bookshelfLibrary = m.ps.Reader.Library
 		case tea.KeyUp.String():
 			switch m.activeTab {
 			case 0:
@@ -255,7 +277,11 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			case 2:
 				m.TryBuy()
 			case 0:
-				m.TrySwitchBook()
+				if m.bookshelf_input.Focused() {
+					m.SubmitBookshelfSearch()
+				} else {
+					m.TrySwitchBook()
+				}
 			case 3:
 				m.SubmitAuctionSearch()
 			case 4:
@@ -301,6 +327,8 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		case tea.KeyCtrlF.String():
 			switch m.activeTab {
+			case 0:
+				m.bookshelf_input.Focus()
 			case 3:
 				m.auction_inputs[0].Focus()
 				m.auction_inputs[1].Blur()
@@ -374,11 +402,21 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.spinner, spinner_cmd = m.spinner.Update(msg)
 		return m, spinner_cmd
 	}
-	var keycmds []tea.Cmd = make([]tea.Cmd, len(m.auction_inputs))
-	for i := range m.auction_inputs {
-		m.auction_inputs[i], keycmds[i] = m.auction_inputs[i].Update(msg)
+
+	switch m.activeTab {
+	case 3:
+		var keycmds []tea.Cmd = make([]tea.Cmd, len(m.auction_inputs))
+		for i := range m.auction_inputs {
+			m.auction_inputs[i], keycmds[i] = m.auction_inputs[i].Update(msg)
+		}
+		return m, tea.Batch(keycmds...)
+	case 0:
+		var keycmd tea.Cmd
+		m.bookshelf_input, keycmd = m.bookshelf_input.Update(msg)
+		return m, keycmd
+
 	}
-	return m, tea.Batch(keycmds...)
+	return m, nil
 
 }
 
