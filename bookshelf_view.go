@@ -123,13 +123,20 @@ func (m *DashboardModel) SubmitBookshelfSearch() {
 	log.Println("SubmitBookshelfSearch | ")
 	if m.bookshelf_input.Value() == "" {
 		m.bookshelf_input.Blur()
+		m.bookshelfLibrary = m.ps.Reader.Library
 		return
 	}
-	lib, err := DB.FindBooksContainsSingle(m.bookshelf_input.Value(), m.bookshelf_input.Value())
+	temp_lib, err := DB.FindBooksContainsSingle(m.bookshelf_input.Value(), m.bookshelf_input.Value())
 	if err != nil {
 		panic(err)
 	}
-	log.Println(lib)
+	log.Println(temp_lib)
+	var lib Library
+	for _, b := range m.ps.Reader.Library.Books {
+		if temp_lib.ContainsBook(b) {
+			lib.AddBookToLibrary(b)
+		}
+	}
 	m.bookshelfLibrary = lib
 	m.ResetPaginator()
 
