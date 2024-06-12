@@ -124,6 +124,7 @@ func (m *DashboardModel) SubmitBookshelfSearch() {
 	if m.bookshelf_input.Value() == "" {
 		m.bookshelf_input.Blur()
 		m.bookshelfLibrary = m.ps.Reader.Library
+		m.ResetPaginator()
 		return
 	}
 	temp_lib, err := DB.FindBooksContainsSingle(m.bookshelf_input.Value(), m.bookshelf_input.Value())
