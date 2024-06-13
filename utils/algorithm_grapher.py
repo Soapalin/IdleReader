@@ -50,7 +50,7 @@ class FuncGraph:
                 readingSpeed = 2
                 readingSpeed_item = 2
             else:
-                readingSpeed  =  (readingSpeed+IQ)/IQ
+                readingSpeed  =  2 + (readingSpeed+IQ)/IQ
                 readingSpeed_item  = (readingSpeed + (readingSpeed+IQ)/IQ)*1.2
 
             print(f"================================================")
@@ -73,16 +73,16 @@ class FuncGraph:
             reading_speed_item.append(readingSpeed_item)
             knowledge_PerMin.append(knowledgePerMin)
 
-        # x = [i for i in range(0, 600)]
-        # plt.plot(x, knowledge_cost,  label="knowledge_cost")
-        # plt.plot(x, knowledge_inc, label="knowledge_inc")
-        # plt.plot(x, reading_speed, label="reading_speed")
-        # plt.plot(x, reading_speed_item, label="reading_speed_item")
-        # plt.plot(x, knowledge_PerMin, label="knowledge_PerMin")
-        # plt.yscale("log")
-        # plt.legend()
-        # plt.title('Log values graph')
-        # plt.show()
+        x = [i for i in range(0, 600)]
+        plt.plot(x, knowledge_cost,  label="knowledge_cost")
+        plt.plot(x, knowledge_inc, label="knowledge_inc")
+        plt.plot(x, reading_speed, label="reading_speed")
+        plt.plot(x, reading_speed_item, label="reading_speed_item")
+        plt.plot(x, knowledge_PerMin, label="knowledge_PerMin")
+        plt.yscale("log")
+        plt.legend()
+        plt.title('Log values graph')
+        plt.show()
 
 
 
