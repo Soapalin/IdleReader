@@ -18,7 +18,10 @@ To play the game, head to the  <a href="#-installation">installation</a> section
 
 Start your journey with only your favourite book in-hand! By reading it, grow your Intelligence and Knowledge. Knowledge is the currency used in-game: use it wisely to purchase and collect your favourite books! Beware, some books have Intelligence requirements, and the only way to grow your IQ is to read different books (at least once). 
 
-Learn more about the <a href="#features">features</a> below or in explore our <a href="https://github.com/Soapalin/IdleReader/wiki">wiki</a> page for in-depth game guides. 
+Learn more about the <a href="#features">features</a> below or in explore our <a href="https://github.com/Soapalin/IdleReader/wiki">wiki</a> page for in-depth game guides.
+
+
+<img src="IdleReader_demo.gif" />
 
 
 ## 📕 Features
@@ -28,7 +31,7 @@ Learn more about the <a href="#features">features</a> below or in explore our <a
 - 📗 IQ Growth: Reading different books will increase your IQ!
 - 📗 Knowledge Growth: Select different books for different rate of growth
 - 📗 Concurrent Reading: Grow your IQ high enough, and read up to 3 books simultaneously!
-- 📘 Auction (Coming Soon): Tired of waiting for your favourite books to be available in the bookshop? Head to the Auction and bid for it! Beware, prices are not low...
+- 📗 Auction: Tired of waiting for your favourite books to be available in the bookshop? Head to the Auction and bid for it! Beware, prices are not low...
 
 
 ## 📕 Installation
@@ -76,7 +79,7 @@ Current version: v0.0.1
 
 ### Road to v0.3
 - [] Add item effects
-- [] Search Book function in My Bookshelf
+- [x] Search Book function in My Bookshelf
 - [] Add price algorithm
 - [] Fetch and add real books (use external API or web scraper)
 - [] Algorithm with reading speed
