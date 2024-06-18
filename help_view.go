@@ -26,8 +26,8 @@ var HelpSection []HelpItem = []HelpItem{
 	{"How do I play this game?", "Purchase, Read, Gain Knowlege and IQ, and finally collect your favourite books!"},
 	{"How do I purchcase books?", "Purchase your books in the Bookshop or Auction. Bookshop books are refreshed and totally randomised while you can look for your favourtie book in the Auction window. Beware, prices are higher!"},
 	{"How do I increase my IQ?", "IQ only increases by a small amount on your first read! You will need to purchase and read different books in order to increase it."},
-	{"How do I read the book I have purchased?", "Head to the your Bookshelf and press 'r' on the book you would like to read."},
-	{"Where can I find an in-depth game guide?", "Head to our official wiki," + lipgloss.NewStyle().Foreground(theme.Pink).Render("{https://placeholder.com}")},
+	{"How do I read the book I have purchased?", "Head to the your Bookshelf and follow the instructions there."},
+	{"Where can I find an in-depth game guide?", "Head to our official wiki," + lipgloss.NewStyle().Foreground(theme.Pink).Render("{https://github.com/Soapalin/IdleReader/wiki}")},
 }
 
 func (m *DashboardModel) HelpView() string {

@@ -80,9 +80,10 @@ Current version: v0.0.1
 ### Road to v0.3
 - [] Add item effects
 - [x] Search Book function in My Bookshelf
+- [] Add cost to auction search
 - [] Add price algorithm
 - [] Fetch and add real books (use external API or web scraper)
-- [] Algorithm with reading speed
+- [x] Algorithm with reading speed
 
 ### Road to v1.0 
 - [] Find solution backwards compatibility with PlayerSave gob 
