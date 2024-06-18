@@ -223,7 +223,6 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				}
 
 			}
-		case "a":
 		case tea.KeyCtrlX.String():
 			switch m.activeTab {
 			case 0:
@@ -332,6 +331,7 @@ func (m *DashboardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			case 3:
 				m.auction_inputs[0].Focus()
 				m.auction_inputs[1].Blur()
+				m.auc_cursor = 0
 			}
 		case "1", "2", "3":
 			switch m.activeTab {
