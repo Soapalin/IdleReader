@@ -11,7 +11,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-var AUCTION_COST_MODIFIER int = 2
+var AUCTION_COST_MODIFIER int = 4
 
 func (m *DashboardModel) AuctionView() string {
 	s := ""
