@@ -115,6 +115,7 @@ func (m *DashboardModel) NextAuctionBook() {
 	if m.auc_cursor >= len(m.auctionLibrary.Books)-1 {
 		// m.auc_cursor = 0
 		// m.auctionPaginator.Page = 0
+
 		return
 	}
 	m.auc_cursor++
