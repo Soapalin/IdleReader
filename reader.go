@@ -41,7 +41,7 @@ func (r *Reader) ReadingIncrease() {
 
 }
 func (r *Reader) IncreaseProgress(book *Book) {
-	book.Progress += 0.05
+	book.Progress += float64(r.ReadingSpeed) / float64(book.Pages)
 }
 
 func (r *Reader) SwitchBook(index int, bookID uuid.UUID) error {
@@ -81,6 +81,17 @@ func (r *Reader) IncreaseIQ(amount int) {
 	}
 	if old_IQ < 200 && r.IQ >= 200 {
 		r.CurrentReadLimit = r.CurrentReadLimit + 1
+	}
+	r.CalculateReadingSpeed()
+}
+
+func (r *Reader) CalculateReadingSpeed() {
+	if r.IQ < 60 {
+		r.ReadingSpeed = 5
+	} else if r.IQ >= 225 {
+		r.ReadingSpeed = 225 / 12
+	} else {
+		r.ReadingSpeed = r.IQ / 12
 	}
 }
 

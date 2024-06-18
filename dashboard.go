@@ -457,7 +457,7 @@ func (m *DashboardModel) View() string {
 	iq := "IQ: " + strconv.Itoa(r.IQ) + " (" + r.IQ_Title() + ")"
 
 	p := "Prestige: " + strconv.Itoa(r.Prestige)
-	rs := "Reading Speed: " + strconv.Itoa(r.Prestige)
+	rs := "Reading Speed: " + strconv.Itoa(r.ReadingSpeed) + " pages/sec"
 
 	v1 := lipgloss.NewStyle().Padding(0, 10, 0, 0).Render(lipgloss.JoinVertical(lipgloss.Left, k, iq))
 	v2 := lipgloss.JoinVertical(lipgloss.Left, rs, p)
