@@ -141,7 +141,7 @@ func (s *Shop) Update(reader_p *Reader) {
 }
 
 func (s *Shop) LoadShopTable(lib_p *Library) {
-	columns := []string{"Name", "Description", "IQ Required", "Knowledge Cost"}
+	columns := []string{"Name", "Details/Author", "IQ Required", "Knowledge Cost"}
 	var rows [][]string
 	n := 0
 	for n < len(s.Books.Books) {
@@ -178,7 +178,7 @@ func InitShop(reader_p *Reader) Shop {
 	var items GameItemDatabase
 	pf := message.NewPrinter(language.English)
 
-	columns := []string{"Name", "Description", "IQ Required", "Knowledge Cost"}
+	columns := []string{"Name", "Details/Author", "IQ Required", "Knowledge Cost"}
 	var rows [][]string
 	allBooks, err := DB.GetBooksByFilter("IntelligenceRequirement <= " + strconv.Itoa(reader_p.IQ))
 
