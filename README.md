@@ -81,7 +81,7 @@ Current version: v0.0.1
 - [] Add item effects
 - [x] Search Book function in My Bookshelf
 - [] Add cost to auction search
-- [] Add price algorithm
+- [x] Add price algorithm
 - [] Fetch and add real books (use external API or web scraper)
 - [x] Algorithm with reading speed
 
