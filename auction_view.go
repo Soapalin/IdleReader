@@ -11,7 +11,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-var AUCTION_COST_MODIFIER int = 2
+var AUCTION_COST_MODIFIER int = 4
 
 func (m *DashboardModel) AuctionView() string {
 	s := ""
@@ -111,9 +111,11 @@ func (m *DashboardModel) AuctionInputsFocused() bool {
 }
 
 func (m *DashboardModel) NextAuctionBook() {
+	m.UnfocusAuctionInputs()
 	if m.auc_cursor >= len(m.auctionLibrary.Books)-1 {
 		// m.auc_cursor = 0
 		// m.auctionPaginator.Page = 0
+
 		return
 	}
 	m.auc_cursor++
@@ -126,6 +128,7 @@ func (m *DashboardModel) NextAuctionBook() {
 
 func (m *DashboardModel) PreviousAuctionBook() {
 	m.auc_cursor--
+	m.UnfocusAuctionInputs()
 	if m.auc_cursor < 0 {
 		m.auc_cursor = 0
 		return
@@ -179,6 +182,12 @@ func (m *DashboardModel) AuctionBuy() TransactionResult {
 }
 
 func (m *DashboardModel) TryAuctionBuy() {
+	if m.AuctionInputsFocused() {
+		return
+	}
+	if len(m.auctionLibrary.Books) == 0 {
+		return
+	}
 	itemID := m.auctionLibrary.Books[m.auc_cursor].ID
 	if m.ps.AlreadyOwned(itemID) {
 		log.Println("AlreadyOwned returned True")
