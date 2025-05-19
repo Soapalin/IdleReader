@@ -78,11 +78,11 @@ Current version: v0.0.1
 - [x] Add a way to display whether item has already been purchased or not in Bookshop
 
 ### Road to v0.3
-- [] Add item effects
+- [x] Add item effects
 - [x] Search Book function in My Bookshelf
-- [] Add cost to auction search
+- [x] Add cost to auction search
 - [x] Add price algorithm
-- [] Fetch and add real books (use external API or web scraper)
+- [x] Fetch and add real books (use external API or web scraper)
 - [x] Algorithm with reading speed
 
 ### Road to v1.0 
